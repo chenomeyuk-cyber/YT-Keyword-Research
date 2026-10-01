@@ -1,0 +1,2124 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YT Keyword Lab</title>
+<meta name="description" content="Riset keyword YouTube: bandingkan keyword dalam rentang waktu pilihan dan temukan related keywords.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --page:#f5f6f8; --surface:#ffffff; --surface-2:#eef0f4; --ink:#141a2e; --ink-2:#4b5368; --muted:#646b80;
+  --line:#e3e6ec; --line-strong:#c6ccd7; --wash:rgba(20,26,46,.05);
+  --s0:#2a78d6; --s1:#eb6834; --s2:#1baf7a; --s3:#eda100; --s4:#e87ba4;
+  --good:#006300; --danger:#b42318; --bar-muted:#c3c9d4;
+  --font:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --page:#0e1220; --surface:#151a2b; --surface-2:#1d2337; --ink:#eef1f7; --ink-2:#b8c0d4; --muted:#9199ae;
+    --line:#262d42; --line-strong:#3a4259; --wash:rgba(238,241,247,.06);
+    --s0:#3987e5; --s1:#d95926; --s2:#199e70; --s3:#c98500; --s4:#d55181;
+    --good:#0ca30c; --danger:#f97066; --bar-muted:#3d465e;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#0e1220; --surface:#151a2b; --surface-2:#1d2337; --ink:#eef1f7; --ink-2:#b8c0d4; --muted:#9199ae;
+  --line:#262d42; --line-strong:#3a4259; --wash:rgba(238,241,247,.06);
+  --s0:#3987e5; --s1:#d95926; --s2:#199e70; --s3:#c98500; --s4:#d55181;
+  --good:#0ca30c; --danger:#f97066; --bar-muted:#3d465e;
+}
+.s0{--c:var(--s0)} .s1{--c:var(--s1)} .s2{--c:var(--s2)} .s3{--c:var(--s3)} .s4{--c:var(--s4)}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.5 var(--font);overflow-x:hidden}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+@media (min-width:760px){.wrap{padding:0 28px}}
+.skip{position:absolute;left:-9999px;top:8px}
+.skip:focus{left:16px;z-index:20;background:var(--surface);padding:8px 12px;border-radius:8px}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+/* top bar */
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;padding-top:12px;padding-bottom:12px}
+.brand{--logo:50px;display:flex;align-items:center;gap:12px;margin-right:auto;min-width:0}
+.logo{width:var(--logo);height:var(--logo);flex:none;display:block;object-fit:contain}
+.brand-text{display:flex;flex-direction:column;justify-content:center;padding-top: 5%;min-width:0}
+.logo .bg{fill:var(--ink)} .logo .bar{fill:var(--surface)}
+.brand-name{font-weight:800;font-size:17px;letter-spacing:-.01em;line-height:1.15}
+.brand-sub{font-size:12.5px;color:var(--muted);line-height:1.2}
+.tabs{display:flex;gap:4px;background:var(--surface-2);padding:4px;border-radius:10px}
+.tabs [role=tab]{border:0;background:transparent;padding:8px 14px;border-radius:7px;font-weight:600;font-size:14px;color:var(--ink-2);cursor:pointer}
+.tabs [role=tab][aria-selected=true]{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--line-strong)}
+.top-actions{display:flex;align-items:center;gap:8px}
+.quota{font-size:12.5px;font-weight:600;color:var(--ink-2);background:var(--surface-2);padding:6px 10px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.quota.warn{color:var(--danger)}
+@media (max-width:759px){
+  .tabs{order:3;width:100%}
+  .tabs [role=tab]{flex:1}
+  .quota{display:none}
+}
+@media (max-width:440px){
+  .brand-sub{display:none}
+  .top-in{gap:10px 12px}
+}
+
+/* buttons & inputs */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:600;line-height:1.2;padding:9px 14px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;white-space:nowrap}
+.btn:hover{background:var(--wash)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.btn.primary:hover{background:var(--ink);opacity:.9}
+.btn.quiet{border-color:transparent;background:transparent}
+.btn.quiet:hover{background:var(--wash)}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:7px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.icon-btn{width:38px;height:38px;padding:0}
+.input{border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;padding:8px 10px;font-size:14px;min-width:0}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2);cursor:pointer}
+.check input{width:16px;height:16px;accent-color:var(--ink);margin:0}
+.link{border:0;background:none;padding:0;font-weight:700;text-decoration:underline;cursor:pointer;color:var(--ink)}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 24px;padding:18px 0 4px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field-label{font-size:13px;font-weight:700;color:var(--ink-2)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;background:var(--surface-2);padding:4px;border-radius:10px}
+.seg button{border:0;background:transparent;padding:7px 12px;border-radius:7px;font-weight:600;font-size:13.5px;color:var(--ink-2);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--line-strong)}
+.seg.small button{padding:5px 10px;font-size:13px}
+.custom-range{flex-direction:row;flex-wrap:wrap;gap:8px 12px}
+.custom-range label{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+
+/* composer */
+.composer{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px;padding:8px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);min-height:52px;cursor:text}
+.chips:focus-within{outline:2px solid var(--ink);outline-offset:1px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:5px 6px 5px 10px;border-radius:999px;background:var(--surface-2);font-weight:600;font-size:14px;max-width:100%}
+.chip .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none;display:inline-block}
+.chip-x{border:0;background:transparent;width:24px;height:24px;border-radius:50%;cursor:pointer;color:var(--ink-2);font-size:17px;line-height:1;display:grid;place-items:center}
+.chip-x:hover{background:var(--wash);color:var(--ink)}
+.chips input{flex:1 1 200px;border:0;outline:0;background:transparent;padding:6px 4px;font-size:15px;min-width:120px}
+.composer-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:12px}
+.cost{font-size:13px;color:var(--muted)}
+.seed-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.seed-row .input{flex:1 1 260px;font-size:15px;padding:10px 12px}
+.opts{border:0;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+
+/* notices */
+.notice{margin-top:12px;background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;padding:12px 14px;font-size:14px}
+.notice.err{border-color:var(--danger)}
+.notice.err strong{color:var(--danger)}
+.notice ul{margin:6px 0 0;padding-left:18px}
+
+/* output */
+.out{transition:opacity .15s}
+.out.is-busy{opacity:.45;pointer-events:none}
+.status{font-size:13px;color:var(--ink-2);font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:16px}
+@media (min-width:760px){.panel{padding:20px 22px}}
+.panel-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:8px 16px;margin-bottom:14px}
+.panel-head h2{margin:0;font-size:16.5px;font-weight:700;letter-spacing:-.005em}
+.panel-sub{margin:4px 0 0;font-size:13.5px;color:var(--muted);max-width:72ch}
+.panel-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.empty{padding:36px 0 12px;max-width:62ch}
+.empty-lead{font-size:20px;font-weight:700;line-height:1.35;margin:0 0 6px;letter-spacing:-.01em}
+.examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+/* summary */
+.summary{margin:28px 0 4px}
+.summary-lead{margin:0;font-size:clamp(19px,2.3vw,24px);font-weight:700;line-height:1.32;letter-spacing:-.01em;max-width:62ch}
+.summary-why{margin:6px 0 0;font-size:15.5px;color:var(--ink-2);max-width:72ch}
+.summary-meta{margin:8px 0 0;font-size:13px;color:var(--muted)}
+
+/* head-to-head sheet */
+.sheet-wrap{position:relative;overflow-x:auto;margin:0 -18px;padding:0 18px}
+.sheet{border-collapse:separate;border-spacing:0;width:100%;min-width:560px;font-size:14px}
+.sheet th,.sheet td{padding:10px 12px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line)}
+.sheet thead th{vertical-align:bottom;border-bottom:1px solid var(--line-strong)}
+.sheet .metric-h{font-size:13px;color:var(--ink-2);font-weight:700}
+.sheet .kw-h{position:relative;padding-top:18px;min-width:132px}
+.sheet .kw-h::before{content:"";position:absolute;left:12px;right:12px;top:0;height:4px;border-radius:0 0 3px 3px;background:var(--c)}
+.kw-h .name{display:block;font-weight:800;font-size:15px;line-height:1.25;word-break:break-word}
+.kw-h .meta{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
+.sheet tbody th{font-weight:600;width:32%;min-width:170px}
+.sheet .hint{display:block;font-weight:400;font-size:12px;color:var(--muted);line-height:1.35}
+.sheet tr.grp th{padding:14px 12px 6px;font-size:12.5px;font-weight:700;color:var(--ink-2);border-bottom:1px solid var(--line-strong)}
+.sheet td{font-variant-numeric:tabular-nums}
+.sheet td .val{font-weight:600}
+.sheet td.best{background:color-mix(in srgb,var(--c) 13%,transparent)}
+.sheet td.best .val{font-weight:800}
+.best-ic{width:14px;height:14px;vertical-align:-2px;margin-left:4px;color:var(--ink)}
+.sheet thead th:first-child,.sheet tbody tr:not(.grp) th{position:sticky;left:0;background:var(--surface);z-index:1}
+.meter{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-top:6px;max-width:150px}
+.meter>span{display:block;height:100%;background:var(--c);border-radius:0 3px 3px 0}
+@media (max-width:640px){
+  .sheet{min-width:0;font-size:13.5px}
+  .sheet th,.sheet td{padding:9px 8px}
+  .sheet tbody th{min-width:128px;width:auto}
+  .sheet .kw-h{min-width:104px}
+  .sheet .kw-h::before{left:8px;right:8px}
+  .sheet .hint{font-size:11.5px}
+}
+
+/* charts */
+.chart{width:100%;position:relative}
+.chart svg{display:block;max-width:100%}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .axis,.chart .mid{stroke:var(--line-strong);stroke-width:1}
+.chart .tick{fill:var(--muted);font-size:11px;font-family:var(--font);font-variant-numeric:tabular-nums}
+.chart .axis-title{fill:var(--ink-2);font-size:12px;font-weight:600;font-family:var(--font)}
+.chart .quad{fill:var(--muted);font-size:12px;font-weight:600;font-family:var(--font)}
+.chart .mk{fill:var(--c);stroke:var(--surface);stroke-width:2}
+.chart .mk.hl{stroke:var(--ink);stroke-width:2}
+.chart .dlabel{fill:var(--ink);font-size:13px;font-weight:700;font-family:var(--font);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.chart .hit{fill:transparent;cursor:pointer}
+.chart .overlay{fill:transparent;pointer-events:all}
+.chart .pt{outline:none}
+.chart .pt:focus-visible .mk{stroke:var(--ink)}
+.legend{list-style:none;display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 0 0;padding:0;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.legend li{display:flex;align-items:center;gap:8px}
+.facets{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px 24px}
+.facet{margin:0;min-width:0}
+.facet figcaption{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;margin-bottom:6px;min-width:0}
+.facet .f-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.facet .f-meta{font-weight:500;color:var(--muted);font-size:12.5px;white-space:nowrap;margin-left:auto}
+.empty-chart{margin:24px 0}
+.trends-box{min-height:120px}
+.trends-box iframe{max-width:100%}
+
+/* tooltip */
+.tip{position:fixed;z-index:60;max-width:280px;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px;font-size:12.5px;line-height:1.4;box-shadow:0 8px 28px rgba(10,14,26,.16);pointer-events:none}
+.tip strong{display:block;font-size:15px;font-weight:800}
+.tip .t-label{color:var(--ink-2)}
+.tip .t-title{font-weight:600;margin:2px 0}
+.tip .t-row{display:flex;align-items:center;gap:6px;color:var(--ink-2)}
+.t-key{display:inline-block;width:14px;height:2px;border-radius:1px;background:var(--c)}
+
+/* video list */
+.vtabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.vtab{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13.5px;cursor:pointer;max-width:100%}
+.vtab[aria-selected=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.vlist{list-style:none;margin:0;padding:0}
+.vid{display:grid;grid-template-columns:24px 120px minmax(0,1fr) auto;gap:12px 14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.vid:last-child{border-bottom:0}
+.rank{font-weight:800;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.thumb{display:block;line-height:0}
+.thumb img,.thumb-ph{width:120px;height:68px;object-fit:cover;border-radius:6px;background:var(--surface-2);display:block}
+.vid-title{font-weight:600;text-decoration:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
+.vid-title:hover{text-decoration:underline}
+.vid-meta{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:12.5px;color:var(--muted);margin-top:3px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.badge{font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2)}
+.badge.hot{background:color-mix(in srgb,var(--good) 14%,transparent);color:var(--good)}
+.vid-stats{display:flex;flex-direction:column;align-items:flex-end;gap:2px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.vid-stats strong{color:var(--ink);font-size:14.5px}
+@media (max-width:640px){
+  .vid{grid-template-columns:20px 92px minmax(0,1fr)}
+  .thumb img,.thumb-ph{width:92px;height:52px}
+  .vid-stats{grid-column:3;flex-direction:row;flex-wrap:wrap;gap:2px 14px;align-items:baseline}
+}
+
+/* related */
+.rel-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:10px}
+.rel-toolbar .input[type=search]{flex:1 1 200px}
+.rel-table{width:100%;border-collapse:collapse;font-size:14px}
+.rel-table th,.rel-table td{padding:8px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.rel-table thead th{font-size:12.5px;font-weight:700;color:var(--ink-2);border-bottom:1px solid var(--line-strong)}
+.rel-table td.kw{font-weight:600;word-break:break-word}
+.rel-table td.num{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink-2)}
+.rel-table .sel{width:28px}
+.sig{display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums;font-weight:600}
+.sig .meter{width:84px;margin:0;flex:none}
+.sig .meter>span{background:var(--s0)}
+.row-actions{display:flex;justify-content:flex-end;gap:2px;flex-wrap:wrap}
+.qtag{font-size:11.5px;font-weight:700;color:var(--ink-2);background:var(--surface-2);border-radius:999px;padding:1px 7px;margin-left:6px;white-space:nowrap}
+.rel-wrap{position:relative}
+@media (max-width:640px){
+  .rel-table thead{display:none}
+  .rel-table tr{display:grid;grid-template-columns:24px minmax(0,1fr) auto;align-items:center;column-gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+  .rel-table td{border:0;padding:0}
+  .rel-table td.sel{grid-row:1 / span 2;align-self:start;padding-top:2px}
+  .rel-table td.kw{grid-column:2}
+  .rel-table td.sigcell{grid-column:3;grid-row:1}
+  .rel-table td.num{display:none}
+  .rel-table td.acts{grid-column:2 / span 2;padding-top:4px}
+  .rel-table .row-actions{justify-content:flex-start;margin-left:-8px}
+  .sig .meter{width:48px}
+}
+.progress{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-top:8px}
+.progress>span{display:block;height:100%;background:var(--ink);transition:width .2s}
+
+/* method */
+.method summary{cursor:pointer;font-weight:700}
+.method ul{margin:10px 0 0;padding-left:18px;max-width:78ch;color:var(--ink-2)}
+.method li{margin:4px 0}
+
+/* dialog */
+dialog{border:1px solid var(--line-strong);border-radius:14px;padding:0;background:var(--surface);color:var(--ink);width:min(540px,calc(100% - 32px));max-height:calc(100% - 32px)}
+dialog::backdrop{background:rgba(10,14,26,.5)}
+.dlg{padding:20px}
+.dlg h2{margin:0 0 4px;font-size:18px}
+.dlg-note{margin:6px 0 10px;padding:10px 12px;border-radius:8px;background:var(--surface-2);font-size:14px}
+.dlg .field{margin-top:14px}
+.key-row{display:flex;gap:8px}
+.key-row .input{flex:1}
+.dlg-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;align-items:center}
+.dlg-actions .grow{flex:1}
+.help{margin-top:16px;border-top:1px solid var(--line);padding-top:12px;font-size:14px}
+.help summary{cursor:pointer;font-weight:700}
+.help ol{padding-left:20px;margin:8px 0;color:var(--ink-2)}
+.help li{margin:4px 0}
+.help code{background:var(--surface-2);padding:1px 5px;border-radius:4px;font-size:13px}
+
+/* toast & footer */
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 32px);z-index:70}
+.toast.show{opacity:1}
+.foot{padding:28px 16px 40px;font-size:12.5px;color:var(--muted);max-width:1180px}
+.foot p{max-width:80ch;margin:0}
+/* detail per keyword */
+.table-scroll{position:relative;overflow-x:auto}
+.mini-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.mini-table th,.mini-table td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.mini-table thead th{font-size:12.5px;font-weight:700;color:var(--ink-2);border-bottom:1px solid var(--line-strong);white-space:nowrap}
+.mini-table tbody th{font-weight:600}
+.mini-table .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mini-table td.strong{font-weight:800}
+.mini-table.wide{min-width:560px}
+.seg-table{min-width:760px;margin-top:14px}
+.seg-table tr.is-sel{background:var(--wash)}
+.seg-btn{border:0;background:none;padding:2px 0;font-weight:700;cursor:pointer;text-align:left;white-space:nowrap;text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px}
+.seg-btn[aria-pressed=true]{text-decoration-color:var(--ink);text-decoration-thickness:2px}
+.scope{margin:14px 0 0;font-size:14px;color:var(--ink-2)}
+.sub{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.sub h3{margin:0;font-size:15px;font-weight:700}
+.sub-note{margin:4px 0 12px;font-size:13.5px;color:var(--ink-2);max-width:80ch}
+.sub-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.time-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px 32px}
+.mini-chart{margin:0;min-width:0}
+.mini-chart figcaption{font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:4px}
+.chart .bar{fill:var(--bar-muted)}
+.chart .bar.best{fill:var(--c)}
+.chart .bar.thin{opacity:.45}
+.chart .tick.n{font-size:10px}
+.chart .vlabel{fill:var(--ink);font-size:11.5px;font-weight:800;font-family:var(--font)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:14px}
+.tile{background:var(--surface-2);border-radius:10px;padding:12px 14px}
+.tile-label{font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.tile-value{font-size:18px;font-weight:800;margin-top:2px;line-height:1.3}
+.tile-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.lift{font-size:12.5px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+.lift.up{color:var(--good)}
+.term-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 28px;margin-top:16px}
+.term-box h4{margin:0 0 6px;font-size:13.5px}
+.terms{margin:0;padding-left:22px;font-size:13.5px}
+.terms li{padding:3px 0}
+.terms .term{font-weight:600;word-break:break-word}
+.terms .term-n{color:var(--muted);margin-left:8px;font-size:12.5px;white-space:nowrap}
+.terms .term-l{margin-left:8px;font-size:12px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+.terms .term-l.up{color:var(--good)}
+.term-box .btn{margin-top:10px}
+.vid-tags{font-size:12px;color:var(--muted);margin-top:4px;word-break:break-word}
+
+/* volume estimate */
+.steps{margin:0;padding-left:20px;display:grid;gap:16px}
+.steps>li{padding-left:4px}
+.step-t{margin:0 0 4px;font-weight:700}
+.step-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
+.step-row .input{min-width:0;flex:0 1 220px}
+.trend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px 18px;margin-top:10px}
+.trend-in{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;min-width:0}
+.trend-in .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trend-in .input{width:84px;flex:none}
+.calib-result{margin-top:14px}
+.calib-result .dot{vertical-align:middle}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+<div class="brand">
+  <img class="logo" src="https://i.ibb.co.com/BvdbMRM/77190088c8605dde08fdd0b3ab1a5441-removebg-preview.png" alt="" width="50" height="50">
+  <div class="brand-text">
+    <div class="brand-name">YT Keyword Lab</div>
+    <div class="brand-sub">Riset keyword YouTube</div>
+  </div>
+</div>
+    <div class="tabs" role="tablist" aria-label="Menu utama">
+      <button type="button" role="tab" id="tab-compare" aria-controls="view-compare" aria-selected="true">Bandingkan</button>
+      <button type="button" role="tab" id="tab-related" aria-controls="view-related" aria-selected="false" tabindex="-1">Related keywords</button>
+    </div>
+    <div class="top-actions">
+      <span class="quota" id="quota"></span>
+      <button type="button" class="btn quiet icon-btn" id="btn-theme" aria-label="Tema">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5a7.5 7.5 0 0 1 0 15z" fill="currentColor"/></svg>
+      </button>
+      <button type="button" class="btn" id="btn-settings">Pengaturan</button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <section class="filters" aria-label="Filter">
+    <div class="field">
+      <span class="field-label" id="lbl-range">Rentang waktu</span>
+      <div class="seg" id="range-seg" role="group" aria-labelledby="lbl-range"></div>
+    </div>
+    <div class="field custom-range" id="custom-range" hidden>
+      <label>Dari <input type="date" class="input" id="d-start"></label>
+      <label>Sampai <input type="date" class="input" id="d-end"></label>
+    </div>
+    <div class="field">
+      <label class="field-label" for="region">Wilayah</label>
+      <select class="input" id="region"></select>
+    </div>
+  </section>
+
+  <section id="view-compare" role="tabpanel" aria-labelledby="tab-compare">
+    <div class="composer">
+      <label class="field-label" for="kw-input">Keyword yang dibandingkan (maks. 5)</label>
+      <div class="chips" id="chips"><input id="kw-input" type="text" autocomplete="off" spellcheck="false" enterkeyhint="done"></div>
+      <div class="composer-actions">
+        <button type="button" class="btn primary" id="btn-analyze">Analisis</button>
+        <label class="check"><input type="checkbox" id="force"> Ambil ulang (abaikan cache)</label>
+        <span class="cost" id="cost" aria-live="polite"></span>
+        <span class="status" id="status" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+    <div id="notice"></div>
+    <div id="compare-out" class="out"></div>
+  </section>
+
+  <section id="view-related" role="tabpanel" aria-labelledby="tab-related" hidden>
+    <div class="composer">
+      <label class="field-label" for="seed">Keyword awal</label>
+      <div class="seed-row">
+        <input class="input" id="seed" type="search" autocomplete="off" spellcheck="false" placeholder="mis. mobile legends" enterkeyhint="search">
+        <button type="button" class="btn primary" id="btn-related">Cari related keywords</button>
+      </div>
+      <fieldset class="opts">
+        <legend class="sr-only">Variasi pencarian saran</legend>
+        <label class="check"><input type="checkbox" id="opt-letters" checked> Huruf a–z</label>
+        <label class="check"><input type="checkbox" id="opt-pre" checked> Kata tanya</label>
+        <label class="check"><input type="checkbox" id="opt-post" checked> Kata pelengkap</label>
+      </fieldset>
+    </div>
+    <div id="related-out" class="out"></div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>Keyword Lab memakai YouTube Data API, saran pencarian YouTube, dan Google Trends. Semua angka adalah estimasi dari data publik. Pakai untuk membandingkan keyword di rentang waktu dan wilayah yang sama, bukan sebagai jumlah pencarian pasti.</p>
+</footer>
+
+<dialog id="dlg-settings" aria-labelledby="dlg-title">
+  <form method="dialog" class="dlg" id="settings-form">
+    <h2 id="dlg-title">Pengaturan</h2>
+    <p class="dlg-note" id="dlg-note" hidden></p>
+    <div class="field">
+      <label class="field-label" for="api-key">YouTube API key</label>
+      <div class="key-row">
+        <input class="input" id="api-key" type="password" autocomplete="off" spellcheck="false" placeholder="AIza…">
+        <button type="button" class="btn" id="btn-show-key" aria-pressed="false">Lihat</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="check"><input type="checkbox" id="remember"> Simpan key di browser ini</label>
+    </div>
+    <div class="field">
+      <label class="field-label" for="limit">Batas pencarian API per hari</label>
+      <input class="input" id="limit" type="number" min="1" max="100000" step="1" style="max-width:140px">
+    </div>
+    <div class="dlg-actions">
+      <button value="save" class="btn primary" id="btn-save">Simpan</button>
+      <button type="button" class="btn" id="btn-test-key">Tes key</button>
+      <span class="grow"></span>
+      <button type="button" class="btn quiet" id="btn-clear-cache">Hapus cache</button>
+      <button type="button" class="btn quiet" id="btn-cancel">Batal</button>
+    </div>
+    <p class="small" id="test-result" role="status" aria-live="polite"></p>
+    <details class="help">
+      <summary>Cara dapat API key gratis</summary>
+      <ol>
+        <li>Buka console.cloud.google.com, lalu buat project baru.</li>
+        <li>Masuk ke APIs &amp; Services, buka Library, cari “YouTube Data API v3”, lalu klik Enable.</li>
+        <li>Masuk ke Credentials, klik Create credentials, pilih API key.</li>
+        <li>Disarankan: edit key itu dan di bagian API restrictions pilih YouTube Data API v3 saja.</li>
+        <li>Tempel key di kolom atas, centang “Simpan key di browser ini”, lalu klik Simpan.</li>
+      </ol>
+      <p class="muted">Kuota gratis: 100 pencarian per hari (1 keyword = 1 pencarian), plus 10.000 unit untuk data video dan channel. Key hanya disimpan di browser ini dan hanya dikirim ke Google.</p>
+      <p class="muted">Kalau file ini dibuka langsung dari folder dan muncul galat koneksi, jalankan server lokal: buka terminal di folder file ini, ketik <code>python -m http.server 8000</code>, lalu buka <code>http://localhost:8000/keyword-lab.html</code>.</p>
+    </details>
+  </form>
+</dialog>
+
+<div id="tip" class="tip" role="tooltip" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------------- helpers ---------------- */
+const $ = (sel, root = document) => root.querySelector(sel);
+function appendKids(el, kids) {
+  for (const c of kids.flat(Infinity)) {
+    if (c == null || c === false) continue;
+    el.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  }
+}
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'text') el.textContent = v;
+    else if (k.slice(0, 2) === 'on' && typeof v === 'function') el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : String(v));
+  }
+  appendKids(el, kids);
+  return el;
+}
+const SVGNS = 'http://www.w3.org/2000/svg';
+function s(tag, attrs, ...kids) {
+  const el = document.createElementNS(SVGNS, tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === 'text') el.textContent = v;
+    else el.setAttribute(k, String(v));
+  }
+  appendKids(el, kids);
+  return el;
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const clamp = (v, a = 0, b = 100) => Math.max(a, Math.min(b, v));
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } },
+};
+function norm(t) {
+  return String(t || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
+}
+function toNum(v) { if (v == null || v === '') return null; const n = Number(v); return isFinite(n) ? n : null; }
+function median(arr) {
+  const a = arr.filter(x => x != null && isFinite(x)).sort((x, y) => x - y);
+  if (!a.length) return null;
+  const m = a.length >> 1;
+  return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
+}
+function parseDur(iso) {
+  const m = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?)?$/.exec(iso || '');
+  if (!m) return null;
+  return (+m[1] || 0) * 86400 + (+m[2] || 0) * 3600 + (+m[3] || 0) * 60 + (+m[4] || 0);
+}
+async function pool(items, n, fn) {
+  let i = 0;
+  const run = async () => { while (i < items.length) { const idx = i++; await fn(items[idx], idx); } };
+  await Promise.all(Array.from({ length: Math.min(n, items.length) }, run));
+}
+
+/* ---------------- formatting ---------------- */
+const nfCompact = new Intl.NumberFormat('id-ID', { notation: 'compact', maximumFractionDigits: 1 });
+const nfInt = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 });
+const nf1 = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 1 });
+const isNum = v => v != null && isFinite(v);
+const fCompact = v => isNum(v) ? nfCompact.format(v) : '–';
+const fPct = v => isNum(v) ? nfInt.format(Math.round(v * 100)) + '%' : '–';
+const dfShort = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' });
+const dfLong = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+const dfClock = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' });
+function ymd(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function parseYmd(v) { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; }
+
+/* ---------------- config ---------------- */
+const MAX_KW = 5;
+const REGIONS = {
+  ID: { name: 'Indonesia', lang: 'id', hl: 'id' },
+  MY: { name: 'Malaysia', lang: 'ms', hl: 'ms' },
+  PH: { name: 'Filipina', lang: 'en', hl: 'en' },
+  SG: { name: 'Singapura', lang: 'en', hl: 'en' },
+  US: { name: 'Amerika Serikat', lang: 'en', hl: 'en' },
+};
+const MODS = {
+  id: { pre: ['cara', 'kenapa', 'apa itu', 'bagaimana', 'tutorial'], post: ['terbaru', 'vs', 'live', 'hari ini', 'tips'] },
+  ms: { pre: ['cara', 'kenapa', 'apa itu', 'bagaimana', 'tutorial'], post: ['terkini', 'vs', 'live', 'hari ini', 'tips'] },
+  en: { pre: ['how to', 'why', 'what is', 'best', 'tutorial'], post: ['new', 'vs', 'live', 'today', 'tips'] },
+};
+const QUESTION_RE = /(^| )(cara|kenapa|mengapa|apa|apakah|bagaimana|gimana|siapa|kapan|dimana|berapa|how|why|what|when|where|who|which)( |$)/;
+const PRESETS = [
+  { id: '7', label: '7 hari', days: 7 },
+  { id: '30', label: '30 hari', days: 30 },
+  { id: '90', label: '90 hari', days: 90 },
+  { id: '180', label: '6 bulan', days: 182 },
+  { id: '365', label: '12 bulan', days: 365 },
+  { id: 'custom', label: 'Pilih tanggal' },
+];
+const TRENDS_LOADER = 'https://ssl.gstatic.com/trends_nrtr/3620_RC01/embed_loader.js';
+const CACHE_KEY = 'kl.cache.v2';
+const CACHE_TTL = 12 * 3600e3;
+
+/* ---------------- state ---------------- */
+const state = {
+  keywords: [],
+  rangePreset: LS.get('kl.range', '30'),
+  customStart: '', customEnd: '',
+  region: LS.get('kl.region', 'ID'),
+  apiKey: LS.get('kl.key', ''),
+  remember: LS.get('kl.remember', true),
+  searchLimit: LS.get('kl.limit', 100),
+  theme: LS.get('kl.theme', 'auto'),
+  compare: null,
+  busy: false,
+  related: null,
+  relFilter: '', relGroup: 'all', relSort: 'signal', relSelected: new Set(), relLimit: 50,
+  detail: { tab: 0, seg: 'all', sort: 'rel', limit: 10 },
+};
+if (!REGIONS[state.region]) state.region = 'ID';
+if (!PRESETS.some(p => p.id === state.rangePreset)) state.rangePreset = '30';
+if (!(state.searchLimit > 0)) state.searchLimit = 100;
+
+/* ---------------- range ---------------- */
+function getRange() {
+  const now = new Date();
+  if (state.rangePreset === 'custom') {
+    const a = parseYmd(state.customStart), b = parseYmd(state.customEnd);
+    if (!a || !b) return { error: 'Isi tanggal mulai dan tanggal akhir dulu.' };
+    if (a > b) return { error: 'Tanggal mulai harus sebelum tanggal akhir.' };
+    if (a > now) return { error: 'Tanggal mulai tidak boleh di masa depan.' };
+    if (a < new Date(2005, 3, 23)) return { error: 'YouTube baru ada sejak April 2005. Pilih tanggal setelahnya.' };
+    let end = new Date(b); end.setHours(23, 59, 59, 999);
+    if (end > now) end = now;
+    const label = `${dfLong.format(a)} – ${dfLong.format(end)}`;
+    return { start: a, end, label, phrase: `antara ${dfLong.format(a)} dan ${dfLong.format(end)}` };
+  }
+  const p = PRESETS.find(x => x.id === state.rangePreset) || PRESETS[1];
+  const start = new Date(now.getTime() - p.days * 864e5); start.setHours(0, 0, 0, 0);
+  return { start, end: now, label: `${p.label} terakhir`, phrase: `dalam ${p.label} terakhir` };
+}
+
+/* ---------------- quota (per Pacific day) ---------------- */
+function ptDay() {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+}
+function quota() {
+  const q = LS.get('kl.quota', null), day = ptDay();
+  return q && q.day === day ? q : { day, search: 0, units: 0 };
+}
+function quotaAdd(field, n) { const q = quota(); q[field] = (q[field] || 0) + n; LS.set('kl.quota', q); renderQuota(); }
+function resetClock() {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(now);
+  const hh = +(parts.find(p => p.type === 'hour') || { value: 0 }).value % 24;
+  const mm = +(parts.find(p => p.type === 'minute') || { value: 0 }).value;
+  return dfClock.format(new Date(now.getTime() + (24 * 60 - (hh * 60 + mm)) * 60000));
+}
+function renderQuota() {
+  const q = quota(), el = $('#quota');
+  el.textContent = `Pencarian API: ${q.search}/${state.searchLimit}`;
+  el.title = `Perkiraan pemakaian kuota pencarian YouTube API hari ini, dihitung di browser ini. Kuota pulih sekitar pukul ${resetClock()}.`;
+  el.classList.toggle('warn', q.search >= state.searchLimit * 0.8);
+  updateCost();
+}
+
+/* ---------------- cache ---------------- */
+function cacheKey(kw, range) { return [norm(kw), ymd(range.start), ymd(range.end), state.region].join('|'); }
+function cacheGet(k) {
+  const c = LS.get(CACHE_KEY, {}), e = c && c[k];
+  return e && Date.now() - e.t < CACHE_TTL ? e.v : null;
+}
+function cacheSet(k, v) {
+  const c = LS.get(CACHE_KEY, {}) || {};
+  c[k] = { t: Date.now(), v };
+  Object.keys(c).sort((a, b) => c[b].t - c[a].t).slice(20).forEach(old => delete c[old]);
+  if (!LS.set(CACHE_KEY, c)) { LS.del(CACHE_KEY); LS.set(CACHE_KEY, { [k]: c[k] }); }
+}
+
+/* ---------------- data: YouTube autocomplete (JSONP) ---------------- */
+let acSeq = 0;
+function suggest(q) {
+  return new Promise((resolve, reject) => {
+    const name = '__klAc' + (++acSeq);
+    const el = document.createElement('script');
+    let settled = false;
+    const finish = () => { settled = true; clearTimeout(timer); el.remove(); window[name] = () => {}; };
+    const timer = setTimeout(() => { if (!settled) { finish(); reject(new Error('timeout')); } }, 8000);
+    window[name] = data => { if (settled) return; finish(); resolve(parseSuggest(data)); };
+    el.onerror = () => { if (!settled) { finish(); reject(new Error('network')); } };
+    const r = REGIONS[state.region];
+    const qs = new URLSearchParams({ client: 'youtube', ds: 'yt', hl: r.hl, gl: state.region.toLowerCase(), q, callback: name });
+    el.src = 'https://suggestqueries.google.com/complete/search?' + qs.toString();
+    el.async = true;
+    document.head.append(el);
+  });
+}
+function parseSuggest(data) {
+  if (!Array.isArray(data) || !Array.isArray(data[1])) return [];
+  return data[1].map(x => Array.isArray(x) ? x[0] : x).filter(x => typeof x === 'string' && x.trim()).map(x => x.trim());
+}
+
+/* ---------------- data: YouTube Data API ---------------- */
+class UserError extends Error { constructor(msg, fatal) { super(msg); this.fatal = !!fatal; } }
+async function yt(path, params, keyOverride) {
+  const key = keyOverride || state.apiKey;
+  if (!key) throw new UserError('Masukkan YouTube API key dulu di Pengaturan.', true);
+  const qs = new URLSearchParams();
+  for (const k in params) if (params[k] != null && params[k] !== '') qs.set(k, params[k]);
+  qs.set('key', key);
+  let res;
+  try { res = await fetch('https://www.googleapis.com/youtube/v3/' + path + '?' + qs.toString()); }
+  catch (e) { throw new UserError('Tidak bisa menghubungi YouTube API. Cek koneksi internet. Kalau file ini dibuka langsung dari folder, coba lewat server lokal (petunjuknya ada di Pengaturan).', true); }
+  let body = null;
+  try { body = await res.json(); } catch (e) { /* ignore */ }
+  if (!res.ok) throw apiError(res.status, body);
+  return body || {};
+}
+function apiError(status, body) {
+  const e = (body && body.error) || {};
+  const reasons = [];
+  (e.errors || []).forEach(x => x && x.reason && reasons.push(x.reason));
+  (e.details || []).forEach(x => x && x.reason && reasons.push(x.reason));
+  const all = `${reasons.join(' ')} ${e.message || ''} ${e.status || ''}`;
+  if (/quotaExceeded|dailyLimitExceeded|exceeded your quota|Quota exceeded/i.test(all)) return new UserError(`Kuota harian YouTube API habis. Kuota pulih sekitar pukul ${resetClock()}.`, true);
+  if (/keyInvalid|API_KEY_INVALID|API key not valid/i.test(all)) return new UserError('API key tidak valid. Cek lagi key di Pengaturan.', true);
+  if (/accessNotConfigured|SERVICE_DISABLED|has not been used|is disabled/i.test(all)) return new UserError('YouTube Data API v3 belum aktif di project Google Cloud-mu. Aktifkan di Library, tunggu beberapa menit, lalu coba lagi.', true);
+  if (/referer|referrer/i.test(all)) return new UserError('API key ini dibatasi untuk alamat web tertentu. Hapus batasan Websites di key itu, atau buka dashboard dari alamat yang diizinkan.', true);
+  if (/rateLimitExceeded|RATE_LIMIT/i.test(all)) return new UserError('Terlalu banyak permintaan dalam waktu singkat. Tunggu sebentar lalu coba lagi.', true);
+  if (status === 403) return new UserError('YouTube API menolak akses (403). Cek pengaturan API key-mu.', true);
+  return new UserError(`YouTube API mengembalikan galat ${status}. Coba lagi sebentar lagi.`, false);
+}
+
+/* ---------------- analysis ---------------- */
+async function analyze(kw, range, force) {
+  const ck = cacheKey(kw, range);
+  if (!force) { const hit = cacheGet(ck); if (hit) return Object.assign({}, hit, { fromCache: true }); }
+  const reg = REGIONS[state.region];
+  const sr = await yt('search', {
+    part: 'snippet', type: 'video', q: kw, maxResults: 50, order: 'relevance',
+    regionCode: state.region, relevanceLanguage: reg.lang,
+    publishedAfter: range.start.toISOString(), publishedBefore: range.end.toISOString(),
+    fields: 'pageInfo/totalResults,items(id/videoId)',
+  });
+  quotaAdd('search', 1);
+  const ids = [];
+  for (const it of (sr.items || [])) { const id = it && it.id && it.id.videoId; if (id && !ids.includes(id)) ids.push(id); }
+  let vids = [];
+  if (ids.length) {
+    const vr = await yt('videos', {
+      part: 'snippet,statistics,contentDetails,liveStreamingDetails', id: ids.join(','),
+      fields: 'items(id,snippet(publishedAt,channelId,channelTitle,title,liveBroadcastContent,tags,thumbnails/medium/url),statistics(viewCount,likeCount,commentCount),contentDetails/duration,liveStreamingDetails(actualStartTime,scheduledStartTime))',
+    });
+    quotaAdd('units', 1);
+    const byId = new Map((vr.items || []).map(v => [v.id, v]));
+    vids = ids.map(id => byId.get(id)).filter(Boolean);
+  }
+  const subs = new Map();
+  const chIds = [...new Set(vids.map(v => v.snippet && v.snippet.channelId).filter(Boolean))].slice(0, 50);
+  if (chIds.length) {
+    const cr = await yt('channels', { part: 'statistics', id: chIds.join(','), fields: 'items(id,statistics(subscriberCount,hiddenSubscriberCount))' });
+    quotaAdd('units', 1);
+    for (const c of (cr.items || [])) {
+      const st = c.statistics || {};
+      subs.set(c.id, st.hiddenSubscriberCount ? null : toNum(st.subscriberCount));
+    }
+  }
+  let ac = null;
+  try { ac = await suggest(kw); } catch (e) { ac = null; }
+  const result = compute(kw, range, sr.pageInfo ? toNum(sr.pageInfo.totalResults) : null, vids, subs, ac);
+  cacheSet(ck, result);
+  return result;
+}
+
+function compute(kw, range, totalResults, vids, subs, ac) {
+  const now = Date.now();
+  const nk = norm(kw);
+  const videos = vids.map((v, i) => {
+    const sn = v.snippet || {}, st = v.statistics || {}, cd = v.contentDetails || {}, ls = v.liveStreamingDetails;
+    const views = toNum(st.viewCount);
+    const pub = Date.parse(sn.publishedAt);
+    const days = Math.max(1, (now - pub) / 864e5);
+    const dur = parseDur(cd.duration);
+    const live = !!(ls && (ls.actualStartTime || ls.scheduledStartTime));
+    const sub = subs.has(sn.channelId) ? subs.get(sn.channelId) : null;
+    return {
+      id: v.id, rank: i + 1, title: sn.title || '', channel: sn.channelTitle || '', channelId: sn.channelId || '',
+      thumb: (sn.thumbnails && sn.thumbnails.medium && sn.thumbnails.medium.url) || '',
+      published: isFinite(pub) ? pub : null, views,
+      likes: toNum(st.likeCount), comments: toNum(st.commentCount),
+      vpd: views == null || !isFinite(pub) ? null : views / days,
+      dur, upcoming: sn.liveBroadcastContent === 'upcoming',
+      type: live ? 'live' : (dur != null && dur > 0 && dur <= 180 ? 'short' : 'long'),
+      subs: sub,
+      exact: nk ? (' ' + norm(sn.title) + ' ').includes(' ' + nk + ' ') : false,
+      ratio: views != null && sub ? views / sub : null,
+      tags: Array.isArray(sn.tags) ? sn.tags.slice(0, 40).map(String) : [],
+      liveStart: live && ls.actualStartTime && isFinite(Date.parse(ls.actualStartTime)) ? Date.parse(ls.actualStartTime) : null,
+    };
+  });
+  const valid = videos.filter(v => v.views != null && !v.upcoming);
+  const top10 = valid.slice(0, 10), top20 = valid.slice(0, 20);
+  const share = f => valid.length ? valid.filter(f).length / valid.length : null;
+  const m = {
+    sample: valid.length,
+    totalResults,
+    medianViews: median(valid.map(v => v.views)),
+    medianVpd: median(valid.map(v => v.vpd)),
+    top10Subs: median(top10.map(v => v.subs)),
+    exactPct: top10.length ? Math.round(100 * top10.filter(v => v.exact).length / top10.length) : null,
+    outliers: top20.length ? top20.filter(v => v.ratio != null && v.ratio >= 3).length : null,
+    engagement: median(valid.filter(v => v.views > 0).map(v => ((v.likes || 0) + (v.comments || 0)) / v.views)),
+    liveShare: share(v => v.type === 'live'),
+    shortShare: share(v => v.type === 'short'),
+    acCount: Array.isArray(ac) ? ac.length : null,
+    nLive: valid.filter(v => v.type === 'live').length,
+    nShort: valid.filter(v => v.type === 'short').length,
+    nLong: valid.filter(v => v.type === 'long').length,
+    nExact: valid.filter(v => v.exact).length,
+    nOutlier: valid.filter(v => v.ratio != null && v.ratio >= 3).length,
+  };
+  // Scores (0–100). See "Cara skor dihitung" in the UI.
+  const vpdScore = m.medianVpd == null ? 0 : clamp(Math.log10(m.medianVpd + 1) / 5 * 100);
+  const acScore = m.acCount == null ? null : clamp(Math.min(m.acCount, 10) * 10);
+  m.demand = Math.round(acScore == null ? vpdScore : 0.8 * vpdScore + 0.2 * acScore);
+  const subsScore = m.top10Subs == null ? 50 : clamp((Math.log10(m.top10Subs + 1) - 2) / 5 * 100);
+  const supplyScore = m.totalResults == null ? 50 : clamp((Math.log10(m.totalResults + 1) - 2) / 4 * 100);
+  const exactScore = m.exactPct == null ? 50 : m.exactPct;
+  m.competition = Math.round(0.5 * subsScore + 0.25 * exactScore + 0.25 * supplyScore);
+  m.opportunity = Math.round(0.6 * m.demand + 0.4 * (100 - m.competition));
+  return { kw, region: state.region, start: range.start.toISOString(), end: range.end.toISOString(), computedAt: now, videos, m, suggestions: ac || [] };
+}
+
+/* ---------------- UI: small pieces ---------------- */
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+const tip = $('#tip');
+function showTip(x, y, kids) {
+  tip.textContent = ''; appendKids(tip, kids); tip.hidden = false;
+  const r = tip.getBoundingClientRect(), pad = 14;
+  let left = x + pad, top = y + pad;
+  if (left + r.width > innerWidth - 8) left = x - r.width - pad;
+  if (top + r.height > innerHeight - 8) top = y - r.height - pad;
+  tip.style.left = Math.max(8, left) + 'px'; tip.style.top = Math.max(8, top) + 'px';
+}
+function hideTip() { tip.hidden = true; }
+function section(title, sub, ...content) {
+  return h('section', { class: 'panel' },
+    h('div', { class: 'panel-head' }, h('div', null, h('h2', { text: title }), sub ? h('p', { class: 'panel-sub', text: sub }) : null)),
+    ...content);
+}
+function checkIcon() {
+  return s('svg', { class: 'best-ic', viewBox: '0 0 16 16', 'aria-hidden': 'true' },
+    s('path', { d: 'M3.5 8.5l3 3 6-7', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+}
+function csvEscape(v) { const t = v == null ? '' : String(v); return /[",\n\r;]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; }
+function downloadCsv(name, rows) {
+  const text = '﻿' + rows.map(r => r.map(csvEscape).join(',')).join('\r\n');
+  const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+  const a = h('a', { href: url, download: name });
+  document.body.append(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1500);
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) { /* fall back */ }
+  const ta = h('textarea', { style: 'position:fixed;left:-9999px;top:0' });
+  ta.value = text; document.body.append(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  ta.remove(); return ok;
+}
+function setStatus(t) { $('#status').textContent = t || ''; }
+function showNotice(content, isErr) {
+  const n = $('#notice'); n.textContent = '';
+  if (content) n.append(h('div', { class: 'notice' + (isErr ? ' err' : ''), role: isErr ? 'alert' : null }, content));
+}
+
+/* ---------------- keywords (chips) ---------------- */
+function persistKeywords() { LS.set('kl.keywords', state.keywords.map(k => k.text)); }
+function addKeyword(raw, quiet) {
+  const text = String(raw || '').trim().replace(/\s+/g, ' ').slice(0, 100);
+  const k = norm(text);
+  if (!k) return false;
+  if (state.keywords.some(x => norm(x.text) === k)) { if (!quiet) toast(`“${text}” sudah ada di daftar.`); return false; }
+  if (state.keywords.length >= MAX_KW) { if (!quiet) toast('Maksimal 5 keyword. Hapus salah satu dulu.'); return false; }
+  const used = new Set(state.keywords.map(x => x.slot));
+  let slot = 0; while (used.has(slot)) slot++;
+  state.keywords.push({ text, slot });
+  persistKeywords(); renderChips(); updateCost(); markStale();
+  return true;
+}
+function removeKeyword(i) {
+  state.keywords.splice(i, 1);
+  persistKeywords(); renderChips(); updateCost(); markStale();
+  $('#kw-input').focus();
+}
+function renderChips() {
+  const box = $('#chips'), input = $('#kw-input');
+  box.querySelectorAll('.chip').forEach(c => c.remove());
+  state.keywords.forEach((k, i) => {
+    box.insertBefore(h('span', { class: `chip s${k.slot}` },
+      h('span', { class: 'dot', 'aria-hidden': 'true' }),
+      h('span', { class: 't', text: k.text }),
+      h('button', { type: 'button', class: 'chip-x', 'aria-label': `Hapus ${k.text}`, onclick: e => { e.stopPropagation(); removeKeyword(i); } }, '×')), input);
+  });
+  const full = state.keywords.length >= MAX_KW;
+  input.disabled = full;
+  input.placeholder = full ? 'Sudah 5 keyword' : (state.keywords.length ? 'Tambah keyword lalu Enter' : 'Ketik keyword lalu Enter, mis. mobile legends');
+}
+function updateCost() {
+  const el = $('#cost'); if (!el) return;
+  const range = getRange();
+  if (range.error || !state.keywords.length) { el.textContent = ''; return; }
+  const force = $('#force').checked;
+  const need = force ? state.keywords.length : state.keywords.filter(k => !cacheGet(cacheKey(k.text, range))).length;
+  const left = Math.max(0, state.searchLimit - quota().search);
+  el.textContent = need === 0 ? 'Semua keyword sudah ada di cache, tidak memakai kuota.' : `Memakai ${need} dari sisa ${left} pencarian API hari ini.`;
+}
+function sameAsCompare() {
+  const c = state.compare; if (!c) return true;
+  const r = getRange();
+  return !r.error && r.label === c.range.label && c.region === state.region &&
+    c.results.map(x => norm(x.kw)).join('|') === state.keywords.map(k => norm(k.text)).join('|');
+}
+function markStale() {
+  const r = getRange();
+  if (r.error) { showNotice(r.error, true); return; }
+  if (state.compare && state.compare.results.length && !sameAsCompare()) {
+    showNotice([ 'Pengaturan berubah. Hasil di bawah masih untuk ', h('strong', { text: state.compare.range.label }), '. Klik Analisis untuk memperbarui.' ]);
+  } else showNotice(null);
+}
+
+/* ---------------- range & region controls ---------------- */
+function renderRangeSeg() {
+  const seg = $('#range-seg'); seg.textContent = '';
+  for (const p of PRESETS) {
+    seg.append(h('button', { type: 'button', 'aria-pressed': String(state.rangePreset === p.id), onclick: () => setRange(p.id) }, p.label));
+  }
+  $('#custom-range').hidden = state.rangePreset !== 'custom';
+}
+function setRange(id) {
+  state.rangePreset = id; LS.set('kl.range', id);
+  renderRangeSeg(); updateCost(); markStale();
+  if (id === 'custom') $('#d-start').focus();
+}
+
+/* ---------------- compare flow ---------------- */
+function setBusy(on) {
+  state.busy = on;
+  $('#btn-analyze').disabled = on;
+  $('#compare-out').classList.toggle('is-busy', on);
+  if (!on) setStatus('');
+}
+async function runCompare() {
+  if (state.busy) return;
+  const input = $('#kw-input');
+  if (input.value.trim()) { addKeyword(input.value); input.value = ''; }
+  if (!state.keywords.length) { toast('Tambahkan minimal satu keyword dulu.'); input.focus(); return; }
+  if (!state.apiKey) { openSettings('Bandingkan butuh YouTube API key (gratis). Tempel key-mu di sini.'); return; }
+  const range = getRange();
+  if (range.error) { showNotice(range.error, true); return; }
+  const force = $('#force').checked;
+  setBusy(true); showNotice(null);
+  const results = [], errors = [];
+  for (const k of state.keywords.slice()) {
+    setStatus(`Menganalisis “${k.text}”…`);
+    try { const r = await analyze(k.text, range, force); r.slot = k.slot; results.push(r); }
+    catch (e) { errors.push({ kw: k.text, msg: e.message || String(e) }); if (e.fatal) break; }
+  }
+  setBusy(false);
+  $('#force').checked = false;
+  if (!results.length) { showNotice(errorList(errors), true); updateCost(); return; }
+  state.compare = { range, region: state.region, results, errors, at: Date.now() };
+  state.detail = { tab: 0, seg: 'all', sort: 'rel', limit: 10 };
+  renderCompare();
+  updateCost();
+}
+function errorList(errors) {
+  return [ h('strong', { text: errors.length > 1 ? `${errors.length} keyword gagal dianalisis` : 'Analisis gagal' }),
+    h('ul', null, errors.map(e => h('li', null, `“${e.kw}”: ${e.msg}`))) ];
+}
+
+/* ---------------- deep analysis helpers ---------------- */
+const fInt = v => isNum(v) ? nfInt.format(Math.round(v)) : '–';
+const SEGMENTS = [
+  { id: 'all', label: 'Semua video', test: () => true },
+  { id: 'live', label: 'Live', test: v => v.type === 'live' },
+  { id: 'short', label: 'Video ≤3 menit', test: v => v.type === 'short' },
+  { id: 'long', label: 'Video panjang', test: v => v.type === 'long' },
+  { id: 'exact', label: 'Judul persis', test: v => v.exact },
+  { id: 'outlier', label: 'Outlier', test: v => v.ratio != null && v.ratio >= 3 },
+];
+const DAY_NAMES = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+const DAY_SHORT = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+const BLOCK_LABELS = ['00–03', '03–06', '06–09', '09–12', '12–15', '15–18', '18–21', '21–24'];
+const BLOCK_SHORT = ['0–3', '3–6', '6–9', '9–12', '12–15', '15–18', '18–21', '21–24'];
+const TZ_NAME = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { return ''; } })();
+const TZ_LABEL = { 'Asia/Jakarta': 'WIB', 'Asia/Pontianak': 'WIB', 'Asia/Makassar': 'WITA', 'Asia/Jayapura': 'WIT' }[TZ_NAME] || 'waktu lokal';
+const MIN_BUCKET = 3;
+const STOPWORDS = new Set(('yang dan di ke dari ini itu untuk dengan pada adalah atau juga aja saja ga gak nggak ngga ya yg ada bisa jadi ' +
+  'akan sudah udah lagi tapi kalau kalo karena oleh sama buat dalam para kok sih deh dong nih tuh lho loh pun kita kami aku saya ' +
+  'the a an of to in for and on with is at by from be are was it this that my your our you we me so or as not no').split(' '));
+
+function validVideos(r) { return r.videos.filter(v => v.views != null && !v.upcoming); }
+function segOf(id) { return SEGMENTS.find(x => x.id === id) || SEGMENTS[0]; }
+function segVideos(r, id) { return validVideos(r).filter(segOf(id).test); }
+function airTime(v) { return v.liveStart || v.published; }
+function dayIndex(d) { return (d.getDay() + 6) % 7; }
+function buckets(vids, kind) {
+  const n = kind === 'hour' ? 8 : 7;
+  const bs = Array.from({ length: n }, () => []);
+  for (const v of vids) {
+    const t = airTime(v); if (t == null) continue;
+    const d = new Date(t);
+    bs[kind === 'hour' ? Math.floor(d.getHours() / 3) : dayIndex(d)].push(v);
+  }
+  return bs.map((list, i) => ({
+    i, n: list.length, medVpd: median(list.map(v => v.vpd)),
+    label: kind === 'hour' ? BLOCK_LABELS[i] : DAY_NAMES[i], short: kind === 'hour' ? BLOCK_SHORT[i] : DAY_SHORT[i],
+  }));
+}
+function bestBucket(vids, kind) {
+  const ok = buckets(vids, kind).filter(b => b.n >= MIN_BUCKET && b.medVpd != null);
+  return ok.length ? ok.reduce((a, b) => (b.medVpd > a.medVpd ? b : a)) : null;
+}
+function fmtBlock(b) { return b ? `${b.label.replace('–', '.00–')}.00` : '–'; }
+function blockName(b) { return /^\d/.test(b.label) ? `${fmtBlock(b)} ${TZ_LABEL}` : b.label; }
+function engOf(v) { return v.views > 0 ? ((v.likes || 0) + (v.comments || 0)) / v.views : null; }
+function segStats(vids, total) {
+  return {
+    n: vids.length, pct: total ? vids.length / total : null,
+    medViews: median(vids.map(v => v.views)), medVpd: median(vids.map(v => v.vpd)),
+    medSubs: median(vids.map(v => v.subs)), eng: median(vids.map(engOf)),
+    bestHour: bestBucket(vids, 'hour'), bestDay: bestBucket(vids, 'day'),
+  };
+}
+function titleFeatures(title, nk) {
+  const t = title || '', n = norm(t);
+  let kwPos = null;
+  if (nk) {
+    const idx = (' ' + n + ' ').indexOf(' ' + nk + ' ');
+    if (idx >= 0) {
+      const rel = idx / Math.max(1, n.length - nk.length);
+      kwPos = rel <= 0.25 ? 'awal' : (rel >= 0.75 ? 'akhir' : 'tengah');
+    }
+  }
+  return {
+    len: [...t].length, words: n ? n.split(' ').length : 0,
+    number: /\d/.test(t), emoji: /\p{Extended_Pictographic}/u.test(t),
+    caps: /(^|[^A-Za-z])[A-Z]{4,}([^A-Za-z]|$)/.test(t), bracket: /[[\](){}【】|]/.test(t),
+    hashtag: /#[\p{L}\p{N}_]+/u.test(t), question: /\?/.test(t), exact: kwPos != null, kwPos,
+  };
+}
+const PATTERNS = [
+  ['exact', 'Memuat keyword persis'], ['number', 'Memuat angka'], ['emoji', 'Memuat emoji'],
+  ['caps', 'Ada kata HURUF BESAR (4+ huruf)'], ['bracket', 'Pakai kurung atau garis tegak'],
+  ['hashtag', 'Memuat hashtag'], ['question', 'Berbentuk pertanyaan'],
+];
+function patternRows(vids, nk) {
+  const feats = vids.map(v => ({ v, f: titleFeatures(v.title, nk) }));
+  return PATTERNS.map(([key, label]) => {
+    const yes = feats.filter(x => x.f[key]).map(x => x.v.vpd), no = feats.filter(x => !x.f[key]).map(x => x.v.vpd);
+    const my = median(yes), mn = median(no);
+    return { key, label, n: yes.length, pct: vids.length ? yes.length / vids.length : null, medYes: my, medNo: mn,
+      lift: yes.length >= MIN_BUCKET && no.length >= MIN_BUCKET && mn > 0 && my != null ? my / mn : null };
+  });
+}
+function titleSummary(vids, nk) {
+  const rows = vids.map(v => ({ v, f: titleFeatures(v.title, nk) }));
+  const top = rows.slice().sort((a, b) => (b.v.vpd || 0) - (a.v.vpd || 0)).slice(0, Math.max(1, Math.ceil(rows.length / 4)));
+  const pos = { awal: 0, tengah: 0, akhir: 0, none: 0 };
+  rows.forEach(x => { pos[x.f.kwPos || 'none']++; });
+  return {
+    medLen: median(rows.map(x => x.f.len)), medLenTop: median(top.map(x => x.f.len)),
+    medWords: median(rows.map(x => x.f.words)), medWordsTop: median(top.map(x => x.f.words)), pos,
+  };
+}
+function termStats(vids, getTerms, minN = 2) {
+  const base = median(vids.map(v => v.vpd));
+  const map = new Map();
+  for (const v of vids) {
+    const seen = new Set();
+    for (const t of getTerms(v)) {
+      if (!t.key || seen.has(t.key)) continue;
+      seen.add(t.key);
+      let e = map.get(t.key);
+      if (!e) { e = { key: t.key, text: t.text, vids: [] }; map.set(t.key, e); }
+      e.vids.push(v);
+    }
+  }
+  return [...map.values()].filter(e => e.vids.length >= minN).map(e => {
+    const m = median(e.vids.map(v => v.vpd));
+    return { key: e.key, text: e.text, n: e.vids.length, medVpd: m, lift: base > 0 && m != null ? m / base : null };
+  }).sort((a, b) => b.n - a.n || (b.medVpd || 0) - (a.medVpd || 0) || a.key.localeCompare(b.key));
+}
+function wordTerms(v, nk) {
+  const kwTok = new Set(nk.split(' '));
+  return norm(v.title).split(' ')
+    .filter(t => t.length >= 2 && !STOPWORDS.has(t) && !kwTok.has(t) && !/^\d{1,3}$/.test(t))
+    .map(t => ({ key: t, text: t }));
+}
+function bigramTerms(v, nk) {
+  const w = norm(v.title).split(' '), out = [];
+  for (let i = 0; i < w.length - 1; i++) {
+    const a = w[i], b = w[i + 1];
+    if (a.length < 2 || b.length < 2 || STOPWORDS.has(a) || STOPWORDS.has(b)) continue;
+    const k = a + ' ' + b;
+    if (nk && (nk === k || (' ' + nk + ' ').includes(' ' + k + ' '))) continue;
+    out.push({ key: k, text: k });
+  }
+  return out;
+}
+function hashtagTerms(v) { return (String(v.title || '').match(/#[\p{L}\p{N}_]+/gu) || []).map(t => ({ key: t.toLowerCase(), text: t })); }
+function tagTerms(v) { return (v.tags || []).map(t => ({ key: norm(t), text: String(t).trim() })); }
+function channelStats(vids) {
+  const map = new Map();
+  for (const v of vids) {
+    const k = v.channelId || v.channel;
+    let e = map.get(k);
+    if (!e) { e = { name: v.channel, subs: v.subs, vids: [] }; map.set(k, e); }
+    e.vids.push(v);
+  }
+  return [...map.values()].map(e => ({ name: e.name, subs: e.subs, n: e.vids.length, medVpd: median(e.vids.map(v => v.vpd)), views: e.vids.reduce((a, v) => a + (v.views || 0), 0) }))
+    .sort((a, b) => b.n - a.n || b.views - a.views);
+}
+
+/* ---------------- volume estimate (anchor + Google Trends) ---------------- */
+function calibKey(c) { return [c.region, ymd(c.range.start), ymd(c.range.end), c.results.map(r => norm(r.kw)).sort().join('|')].join('#'); }
+function calibGet(c) { const all = LS.get('kl.calib', {}) || {}; return all[calibKey(c)] || null; }
+function calibSet(c, entry) {
+  const all = LS.get('kl.calib', {}) || {};
+  if (entry) all[calibKey(c)] = Object.assign({}, entry, { t: Date.now() }); else delete all[calibKey(c)];
+  Object.keys(all).sort((a, b) => (all[b].t || 0) - (all[a].t || 0)).slice(30).forEach(k => delete all[k]);
+  LS.set('kl.calib', all);
+}
+function roundSig(x, d = 2) { if (!(x > 0)) return 0; const p = Math.pow(10, Math.floor(Math.log10(x)) - d + 1); return Math.round(x / p) * p; }
+function estimates(c) {
+  const e = calibGet(c);
+  if (!e || !(e.vol > 0) || !e.trends) return null;
+  const ta = e.trends[e.anchor];
+  if (!(ta > 0)) return null;
+  const items = {};
+  for (const r of c.results) {
+    const k = norm(r.kw), t = e.trends[k];
+    if (t == null || !isFinite(t)) { items[k] = null; continue; }
+    const isAnchor = k === e.anchor;
+    const below = !isAnchor && t < 1;
+    const raw = isAnchor ? e.vol : e.vol * Math.max(t, below ? 1 : 0) / ta;
+    let conf = t < 1 ? 'sangat rendah' : (t < 5 ? 'rendah' : (t < 20 ? 'sedang' : 'tinggi'));
+    if (ta < 5 && !isAnchor) conf = 'rendah';
+    items[k] = { raw, est: roundSig(raw), trends: t, conf, anchor: isAnchor, below };
+  }
+  return { anchor: e.anchor, vol: e.vol, items };
+}
+function fmtEst(x) { return x ? `${x.below ? '< ' : '≈ '}${fCompact(x.est)}/bulan` : '–'; }
+function parseCsvLine(line) {
+  const out = []; let cur = '', q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (q) { if (ch === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ',') { out.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  out.push(cur);
+  return out.map(x => x.trim());
+}
+function parseTrendsCsv(text) {
+  const rows = String(text || '').replace(/^﻿/, '').split(/\r?\n/).map(parseCsvLine);
+  const isData = r => r.length >= 2 && /^\d{4}-\d{2}/.test(r[0]);
+  const first = rows.findIndex(isData);
+  if (first < 1) return null;
+  let hi = first - 1;
+  while (hi >= 0 && rows[hi].filter(Boolean).length < 2) hi--;
+  if (hi < 0) return null;
+  const cols = rows[hi].slice(1).map(x => x.replace(/:\s*\([^)]*\)\s*$/, '').trim());
+  const sums = cols.map(() => 0), counts = cols.map(() => 0);
+  for (let i = first; i < rows.length; i++) {
+    const r = rows[i]; if (!isData(r)) continue;
+    cols.forEach((_, j) => {
+      const raw = (r[j + 1] || '').replace(/\s/g, '');
+      if (!raw) return;
+      const v = raw.startsWith('<') ? 0.5 : Number(raw.replace(',', '.'));
+      if (isFinite(v)) { sums[j] += v; counts[j]++; }
+    });
+  }
+  return cols.map((name, j) => ({ name, avg: counts[j] ? sums[j] / counts[j] : null, n: counts[j] })).filter(x => x.name);
+}
+function matchTrendsColumns(cols, c) {
+  const res = {};
+  for (const r of c.results) {
+    const k = norm(r.kw);
+    let col = cols.find(x => norm(x.name) === k);
+    if (!col) { const cand = cols.filter(x => { const n = norm(x.name); return n && (n.includes(k) || k.includes(n)); }); if (cand.length === 1) col = cand[0]; }
+    if (col && col.avg != null) res[k] = Math.round(col.avg * 10) / 10;
+  }
+  return res;
+}
+
+/* ---------------- compare rendering ---------------- */
+let pendingTrends = [];
+function renderCompare() {
+  const out = $('#compare-out');
+  out.textContent = ''; hideTip();
+  const c = state.compare;
+  if (!c) { out.append(emptyCompare()); return; }
+  if (c.errors.length) out.append(h('div', { class: 'notice err', role: 'alert' }, errorList(c.errors)));
+  out.append(summaryBlock(c), h('div', { id: 'sheet-host' }), calibBlock(c), matrixBlock(c), trendsBlock(c), multiplesBlock(c), h('div', { id: 'detail-host' }), methodBlock());
+  renderSheet();
+  renderDetail();
+  drawCharts();
+  const list = pendingTrends; pendingTrends = []; list.forEach(fn => fn());
+  markStale();
+}
+function renderSheet() {
+  const host = $('#sheet-host');
+  if (!host || !state.compare) return;
+  host.textContent = '';
+  host.append(sheetBlock(state.compare));
+}
+function emptyCompare() {
+  return h('div', { class: 'empty' },
+    h('p', { class: 'empty-lead', text: 'Bandingkan sampai 5 keyword dalam rentang waktu yang kamu pilih.' }),
+    h('p', { class: 'muted', text: 'Ketik keyword di atas lalu tekan Enter, atau mulai dari contoh ini:' }),
+    h('div', { class: 'examples' }, ['mobile legends', 'mlbb', 'honor of kings'].map(t =>
+      h('button', { type: 'button', class: 'btn sm', onclick: () => addKeyword(t) }, t))),
+    state.apiKey ? null : h('p', { class: 'notice' },
+      'Bandingkan butuh YouTube API key gratis. ',
+      h('button', { type: 'button', class: 'link', onclick: () => openSettings() }, 'Atur API key'),
+      '. Tab Related keywords bisa langsung dipakai tanpa key.'));
+}
+function summaryBlock(c) {
+  const rs = c.results;
+  const best = rs.slice().sort((a, b) => b.m.opportunity - a.m.opportunity)[0];
+  let lead, why = '';
+  if (rs.length === 1) {
+    lead = `“${best.kw}” mendapat skor peluang ${best.m.opportunity} dari 100 untuk video yang terbit ${c.range.phrase}.`;
+    why = `Permintaan ${best.m.demand}, persaingan ${best.m.competition}. Tambahkan keyword lain untuk melihat perbandingannya.`;
+  } else {
+    const topDemand = rs.reduce((a, b) => (b.m.demand > a.m.demand ? b : a));
+    const lowComp = rs.reduce((a, b) => (b.m.competition < a.m.competition ? b : a));
+    lead = `“${best.kw}” paling berpeluang untuk video yang terbit ${c.range.phrase}, dengan skor ${best.m.opportunity} dari 100.`;
+    if (topDemand === best && lowComp === best) why = 'Permintaannya paling tinggi dan persaingannya paling longgar.';
+    else if (topDemand === best) why = `Permintaannya paling tinggi, walau persaingan paling longgar ada di “${lowComp.kw}”.`;
+    else if (lowComp === best) why = `Persaingannya paling longgar, walau permintaan tertinggi ada di “${topDemand.kw}”.`;
+    else why = `Permintaan tertinggi ada di “${topDemand.kw}” dan persaingan paling longgar di “${lowComp.kw}”, tapi kombinasi keduanya paling seimbang di “${best.kw}”.`;
+  }
+  const cached = rs.filter(r => r.fromCache).length;
+  const meta = `Wilayah ${REGIONS[c.region].name}. Dianalisis pukul ${dfClock.format(new Date(c.at))}.` + (cached ? ` ${cached} keyword diambil dari cache.` : '');
+  return h('div', { class: 'summary' },
+    h('p', { class: 'summary-lead', text: lead }),
+    why ? h('p', { class: 'summary-why', text: why }) : null,
+    h('p', { class: 'summary-meta', text: meta }));
+}
+
+function nPct(v, r) { return isNum(v) ? `${v} (${fPct(r.m.sample ? v / r.m.sample : null)})` : '–'; }
+function sheetRows(c) {
+  const est = estimates(c);
+  const rows = [
+    { group: 'Skor' },
+    { label: 'Skor peluang', hint: '60% permintaan, 40% persaingan yang longgar', better: 'max', meter: true, get: r => r.m.opportunity },
+    { label: 'Permintaan', hint: 'Kecepatan views dan saran autocomplete', better: 'max', meter: true, get: r => r.m.demand },
+    { label: 'Persaingan', hint: 'Ukuran channel, judul persis, jumlah video', better: 'min', meter: true, get: r => r.m.competition },
+    { group: 'Permintaan' },
+  ];
+  if (est) rows.push({ label: 'Estimasi pencarian per bulan', hint: 'Dari keyword jangkar dan Google Trends', better: 'max',
+    get: r => { const x = est.items[norm(r.kw)]; return x ? x.raw : null; }, fmt: (v, r) => fmtEst(est.items[norm(r.kw)]) });
+  rows.push(
+    { label: 'Median views per hari', hint: 'Dihitung sejak video terbit', better: 'max', get: r => r.m.medianVpd, fmt: fCompact },
+    { label: 'Median views per video', better: 'max', get: r => r.m.medianViews, fmt: fCompact },
+    { label: 'Saran autocomplete', hint: 'Jumlah saran YouTube saat keyword diketik', better: 'max', get: r => r.m.acCount, fmt: v => isNum(v) ? `${v} saran` : '–' },
+    { label: 'Engagement', hint: 'Like dan komentar dibagi views', better: 'max', get: r => r.m.engagement, fmt: v => isNum(v) ? nf1.format(v * 100) + '%' : '–' },
+    { group: 'Persaingan' },
+    { label: 'Median subscriber top 10', hint: 'Channel pemilik 10 hasil teratas', better: 'min', get: r => r.m.top10Subs, fmt: fCompact },
+    { label: 'Judul persis di top 10', hint: 'Dari 10 hasil teratas', better: 'min', get: r => r.m.exactPct, fmt: v => isNum(v) ? v + '%' : '–' },
+    { label: 'Perkiraan jumlah video', hint: 'Angka kasar dari YouTube untuk rentang ini', better: null, get: r => r.m.totalResults, fmt: fCompact },
+    { group: 'Rincian sampel (maks. 50 video teratas)' },
+    { label: 'Video dianalisis', better: null, get: r => r.m.sample, fmt: v => String(v) },
+    { label: 'Video live', better: null, get: r => r.m.nLive, fmt: nPct },
+    { label: 'Video ≤3 menit', hint: 'Kemungkinan Shorts', better: null, get: r => r.m.nShort, fmt: nPct },
+    { label: 'Video panjang', better: null, get: r => r.m.nLong, fmt: nPct },
+    { label: 'Judul persis', hint: 'Dari semua video di sampel', better: null, get: r => r.m.nExact, fmt: nPct },
+    { label: 'Outlier', hint: 'Views minimal 3× subscriber channel-nya', better: 'max', get: r => r.m.nOutlier, fmt: nPct },
+    { label: `Jam tayang terbaik (${TZ_LABEL})`, hint: `Median views per hari tertinggi, minimal ${MIN_BUCKET} video per blok`, better: null, get: () => null, fmt: (v, r) => fmtBlock(bestBucket(validVideos(r), 'hour')) },
+    { label: 'Hari tayang terbaik', better: null, get: () => null, fmt: (v, r) => { const b = bestBucket(validVideos(r), 'day'); return b ? b.label : '–'; } },
+  );
+  return rows;
+}
+function sheetBlock(c) {
+  const rs = c.results;
+  const thead = h('thead', null, h('tr', null,
+    h('th', { scope: 'col', class: 'metric-h' }, 'Metrik'),
+    rs.map(r => h('th', { scope: 'col', class: `kw-h s${r.slot}` },
+      h('span', { class: 'name', text: r.kw }),
+      h('span', { class: 'meta', text: r.fromCache ? 'dari cache' : 'data baru' })))));
+  const tbody = h('tbody');
+  for (const row of sheetRows(c)) {
+    if (row.group) { tbody.append(h('tr', { class: 'grp' }, h('th', { colspan: rs.length + 1, scope: 'colgroup', text: row.group }))); continue; }
+    const vals = rs.map(r => row.get(r));
+    const nums = vals.filter(isNum);
+    let target = null;
+    if (row.better && rs.length > 1 && nums.length > 1 && Math.min(...nums) !== Math.max(...nums)) {
+      target = row.better === 'max' ? Math.max(...nums) : Math.min(...nums);
+    }
+    tbody.append(h('tr', null,
+      h('th', { scope: 'row' }, row.label, row.hint ? h('span', { class: 'hint', text: row.hint }) : null),
+      rs.map((r, i) => {
+        const v = vals[i];
+        const isBest = target != null && isNum(v) && v === target;
+        const text = row.meter ? (isNum(v) ? String(v) : '–') : row.fmt(v, r);
+        return h('td', { class: `s${r.slot}` + (isBest ? ' best' : '') },
+          h('span', { class: 'val', text }),
+          isBest ? [checkIcon(), h('span', { class: 'sr-only', text: ' (terbaik di baris ini)' })] : null,
+          row.meter && isNum(v) ? h('div', { class: 'meter', 'aria-hidden': 'true' }, h('span', { style: `width:${clamp(v)}%` })) : null);
+      })));
+  }
+  return section('Perbandingan head-to-head', 'Tanda centang menandai nilai terbaik di tiap baris. Untuk persaingan, subscriber, dan judul persis, makin kecil makin baik.',
+    h('div', { class: 'sheet-wrap' }, h('table', { class: 'sheet' }, thead, tbody)),
+    h('div', { class: 'panel-actions' },
+      h('button', { type: 'button', class: 'btn', onclick: () => exportCompareCsv(c) }, 'Unduh CSV ringkasan'),
+      h('button', { type: 'button', class: 'btn', onclick: () => exportVideosCsv(c) }, 'Unduh CSV semua video')));
+}
+
+function calibBlock(c) {
+  const e = calibGet(c) || {};
+  const anchorSel = h('select', { class: 'input', id: 'calib-anchor', 'aria-label': 'Keyword jangkar' },
+    c.results.map(r => h('option', { value: norm(r.kw), selected: e.anchor === norm(r.kw) }, r.kw)));
+  const volIn = h('input', { class: 'input', id: 'calib-vol', type: 'number', min: 0, step: 'any', inputmode: 'numeric', placeholder: 'Volume per bulan, mis. 12000', 'aria-label': 'Volume pencarian per bulan untuk keyword jangkar', value: e.vol || '' });
+  const fileIn = h('input', { type: 'file', accept: '.csv,text/csv', hidden: true, id: 'calib-file', onchange: ev => importTrendsCsv(ev, c) });
+  const inputs = c.results.map(r => {
+    const k = norm(r.kw);
+    return h('label', { class: `trend-in s${r.slot}` },
+      h('span', { class: 'dot', 'aria-hidden': 'true' }), h('span', { class: 't', text: r.kw }),
+      h('input', { class: 'input', type: 'number', min: 0, max: 100, step: 'any', 'data-k': k, 'aria-label': `Rata-rata Google Trends untuk ${r.kw}`, value: e.trends && e.trends[k] != null ? e.trends[k] : '' }));
+  });
+  return section('Estimasi volume pencarian per bulan', 'YouTube tidak membuka angka volume. Jadi estimasinya dihitung dari satu keyword jangkar yang volumenya kamu ketahui, lalu dibandingkan lewat Google Trends. Hasil paling stabil kalau rentang waktunya 12 bulan.',
+    h('ol', { class: 'steps' },
+      h('li', null,
+        h('p', { class: 'step-t', text: 'Pilih keyword jangkar dan isi volume per bulannya' }),
+        h('div', { class: 'step-row' }, anchorSel, volIn),
+        h('p', { class: 'muted small' }, 'Angkanya bisa dari ',
+          h('a', { href: 'https://ahrefs.com/keyword-generator', target: '_blank', rel: 'noopener' }, 'Ahrefs Keyword Generator'),
+          ' (gratis; pilih mesin pencari YouTube dan negara yang sama) atau tool lain yang kamu percaya.')),
+      h('li', null,
+        h('p', { class: 'step-t', text: 'Isi rata-rata Google Trends tiap keyword' }),
+        h('p', { class: 'muted small', text: 'Buka perbandingan di Google Trends, unduh CSV dari grafik minat dari waktu ke waktu, lalu unggah di sini. Bisa juga diketik manual dari angka rata-rata di halaman Trends.' }),
+        h('div', { class: 'step-row' },
+          h('a', { class: 'btn', href: trendsUrl(c.results.map(r => r.kw), c.range, c.region), target: '_blank', rel: 'noopener' }, 'Buka di Google Trends'),
+          h('button', { type: 'button', class: 'btn', onclick: () => fileIn.click() }, 'Unggah CSV Trends'), fileIn),
+        h('div', { class: 'trend-grid' }, inputs))),
+    h('div', { class: 'panel-actions' },
+      h('button', { type: 'button', class: 'btn primary', onclick: () => saveCalib(c) }, 'Hitung estimasi'),
+      h('button', { type: 'button', class: 'btn quiet', onclick: () => { calibSet(c, null); renderCalibResult(c); renderSheet(); toast('Estimasi dihapus.'); } }, 'Hapus estimasi')),
+    h('div', { id: 'calib-result', class: 'calib-result' }, calibResultNodes(c)));
+}
+function saveCalib(c) {
+  const anchor = $('#calib-anchor').value, vol = Number($('#calib-vol').value);
+  const trends = {};
+  document.querySelectorAll('.trend-grid input[data-k]').forEach(i => {
+    const v = i.value.trim().replace(',', '.');
+    if (v !== '' && isFinite(Number(v)) && Number(v) >= 0) trends[i.dataset.k] = Number(v);
+  });
+  if (!(vol > 0)) { toast('Isi volume per bulan untuk keyword jangkar.'); $('#calib-vol').focus(); return; }
+  if (!(trends[anchor] > 0)) { toast('Isi angka Trends keyword jangkar, harus lebih dari 0.'); return; }
+  calibSet(c, { anchor, vol, trends });
+  renderCalibResult(c); renderSheet();
+  toast('Estimasi volume dihitung.');
+}
+function renderCalibResult(c) { const host = $('#calib-result'); if (!host) return; host.textContent = ''; appendKids(host, [calibResultNodes(c)]); }
+function calibResultNodes(c) {
+  const est = estimates(c);
+  if (!est) return null;
+  const rows = c.results.map(r => {
+    const x = est.items[norm(r.kw)];
+    return h('tr', null,
+      h('th', { scope: 'row' }, h('span', { class: `dot s${r.slot}`, 'aria-hidden': 'true' }), ' ', r.kw),
+      h('td', { class: 'num', text: x ? nf1.format(x.trends) : '–' }),
+      h('td', { class: 'num strong', text: x ? fmtEst(x) : 'Isi angka Trends' }),
+      h('td', { text: x ? (x.anchor ? 'Jangkar' : `Keyakinan ${x.conf}`) : '–' }));
+  });
+  return [
+    h('div', { class: 'table-scroll' }, h('table', { class: 'mini-table' },
+      h('thead', null, h('tr', null, h('th', { scope: 'col', text: 'Keyword' }), h('th', { scope: 'col', class: 'num', text: 'Rata-rata Trends' }), h('th', { scope: 'col', class: 'num', text: 'Estimasi pencarian' }), h('th', { scope: 'col', text: 'Catatan' }))),
+      h('tbody', null, rows))),
+    h('p', { class: 'muted small', text: 'Rumus: volume jangkar × (Trends keyword ÷ Trends jangkar). Keyakinan turun kalau angka Trends di bawah 5, karena Google membulatkan angka kecil. Akurasinya mengikuti akurasi angka jangkar.' }),
+  ];
+}
+function importTrendsCsv(ev, c) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    ev.target.value = '';
+    const cols = parseTrendsCsv(String(reader.result || ''));
+    if (!cols || !cols.length) { toast('Format CSV tidak dikenali. Pakai CSV dari grafik minat dari waktu ke waktu.'); return; }
+    const mapped = matchTrendsColumns(cols, c);
+    let filled = 0;
+    document.querySelectorAll('.trend-grid input[data-k]').forEach(i => { if (mapped[i.dataset.k] != null) { i.value = mapped[i.dataset.k]; filled++; } });
+    toast(filled ? `${filled} angka Trends terisi dari CSV. Klik Hitung estimasi.` : 'Nama keyword di CSV tidak cocok dengan keyword yang dibandingkan.');
+  };
+  reader.onerror = () => toast('File CSV gagal dibaca.');
+  reader.readAsText(file);
+}
+
+function matrixBlock(c) {
+  return section('Peta peluang', 'Kiri atas berarti banyak dicari tapi persaingannya longgar. Arahkan kursor atau fokus ke titik untuk melihat skornya.',
+    h('div', { class: 'chart', id: 'matrix' }),
+    h('ul', { class: 'legend', 'aria-label': 'Keterangan warna' }, c.results.map(r => h('li', { class: `s${r.slot}` }, h('span', { class: 'dot', 'aria-hidden': 'true' }), r.kw))));
+}
+function trendsBlock(c) {
+  const kws = c.results.map(r => r.kw);
+  const box = h('div', { class: 'trends-box' }, h('p', { class: 'muted small', text: 'Memuat grafik Google Trends…' }));
+  pendingTrends.push(() => renderTrendsWidget(box, 'TIMESERIES', kws, c.range, c.region));
+  return section('Minat pencarian di YouTube', `Data Google Trends untuk YouTube Search di ${REGIONS[c.region].name}, rentang ${c.range.label}. Angka 0–100 adalah indeks relatif antar-keyword, bukan jumlah pencarian.`,
+    box,
+    h('div', { class: 'panel-actions' }, h('a', { class: 'btn', href: trendsUrl(kws, c.range, c.region), target: '_blank', rel: 'noopener' }, 'Buka di Google Trends')));
+}
+function multiplesBlock(c) {
+  return section('Video yang terbit di rentang ini', 'Tiap titik adalah satu video dari hasil teratas (maks. 50). Sumbu tegak memakai skala log supaya video kecil dan besar sama-sama terlihat.',
+    h('div', { class: 'facets' }, c.results.map((r, i) => h('figure', { class: `facet s${r.slot}` },
+      h('figcaption', null, h('span', { class: 'dot', 'aria-hidden': 'true' }), h('span', { class: 'f-name', text: r.kw }), h('span', { class: 'f-meta', text: `${r.m.sample} video` })),
+      h('div', { class: 'chart facet-chart', 'data-i': i })))));
+}
+
+/* ---------------- per-keyword detail ---------------- */
+function renderDetail(focusSel) {
+  const host = $('#detail-host'), c = state.compare;
+  if (!host || !c || !c.results.length) return;
+  hideTip();
+  const D = state.detail, rs = c.results;
+  if (D.tab >= rs.length) D.tab = 0;
+  const r = rs[D.tab], nk = norm(r.kw);
+  const all = validVideos(r), vids = segVideos(r, D.seg), seg = segOf(D.seg);
+  const tabs = h('div', { class: 'vtabs', role: 'tablist', 'aria-label': 'Pilih keyword' });
+  rs.forEach((x, i) => tabs.append(h('button', {
+    type: 'button', role: 'tab', class: `vtab s${x.slot}`, 'aria-selected': String(i === D.tab), tabindex: i === D.tab ? 0 : -1,
+    onclick: () => { D.tab = i; D.limit = 10; renderDetail('.vtab[aria-selected="true"]'); },
+    onkeydown: e => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      D.tab = (D.tab + (e.key === 'ArrowRight' ? 1 : -1) + rs.length) % rs.length; D.limit = 10;
+      renderDetail('.vtab[aria-selected="true"]');
+    },
+  }, h('span', { class: 'dot', 'aria-hidden': 'true' }), x.kw)));
+  const segRows = SEGMENTS.map(sg => {
+    const st = segStats(segVideos(r, sg.id), all.length), on = D.seg === sg.id;
+    return h('tr', { class: on ? 'is-sel' : null },
+      h('th', { scope: 'row' }, h('button', { type: 'button', class: 'seg-btn', 'aria-pressed': String(on), onclick: () => { D.seg = sg.id; D.limit = 10; renderDetail('.seg-btn[aria-pressed="true"]'); } }, sg.label)),
+      h('td', { class: 'num', text: sg.id === 'all' ? String(st.n) : `${st.n} (${fPct(st.pct)})` }),
+      h('td', { class: 'num', text: fCompact(st.medVpd) }),
+      h('td', { class: 'num', text: fCompact(st.medViews) }),
+      h('td', { class: 'num', text: fCompact(st.medSubs) }),
+      h('td', { class: 'num', text: isNum(st.eng) ? nf1.format(st.eng * 100) + '%' : '–' }),
+      h('td', { text: st.bestHour ? fmtBlock(st.bestHour) : '–' }),
+      h('td', { text: st.bestDay ? st.bestDay.label : '–' }));
+  });
+  const segTable = h('div', { class: 'table-scroll' }, h('table', { class: 'mini-table seg-table' },
+    h('thead', null, h('tr', null, ['Segmen', 'Jumlah video', 'Median views/hari', 'Median views', 'Median subscriber', 'Engagement', `Jam terbaik (${TZ_LABEL})`, 'Hari terbaik']
+      .map((t, i) => h('th', { scope: 'col', class: i >= 1 && i <= 5 ? 'num' : null, text: t })))),
+    h('tbody', null, segRows)));
+  const body = vids.length
+    ? [timeSection(vids), titleSection(vids, nk), tagSection(vids), channelSection(vids), videoListSection(vids)]
+    : [h('p', { class: 'muted', text: 'Tidak ada video di segmen ini. Pilih segmen lain di tabel.' })];
+  host.textContent = '';
+  host.append(section('Detail per keyword', 'Pilih keyword, lalu klik nama segmen di tabel. Semua analisis di bawah tabel mengikuti segmen yang dipilih.',
+    tabs, segTable,
+    h('p', { class: 'scope' }, 'Segmen dipilih: ', h('strong', { text: `${seg.label} untuk “${r.kw}”` }), ` (${vids.length} video).`),
+    ...body,
+    h('div', { class: 'panel-actions' }, h('button', { type: 'button', class: 'btn', onclick: () => exportTermsCsv(r, vids, seg) }, 'Unduh CSV analisis judul & tag'))));
+  drawDetailCharts();
+  if (focusSel) { const f = host.querySelector(focusSel); if (f) f.focus(); }
+}
+function subHead(title, note) { return [h('h3', { text: title }), note ? h('p', { class: 'sub-note', text: note }) : null]; }
+function timeSection(vids) {
+  const bh = bestBucket(vids, 'hour'), bd = bestBucket(vids, 'day');
+  let note;
+  if (!bh && !bd) note = `Data belum cukup. Butuh minimal ${MIN_BUCKET} video di satu blok waktu.`;
+  else {
+    const parts = [];
+    if (bh) parts.push(`jam ${fmtBlock(bh)} (median ${fCompact(bh.medVpd)} views/hari dari ${bh.n} video)`);
+    if (bd) parts.push(`hari ${bd.label} (median ${fCompact(bd.medVpd)} views/hari dari ${bd.n} video)`);
+    note = `Paling bagus: ${parts.join(' dan ')}.`;
+  }
+  return h('div', { class: 'sub' }, subHead(`Jam dan hari tayang terbaik (${TZ_LABEL})`, note + ' Untuk live, waktunya dihitung dari jam mulai siaran. Batang pucat berarti kurang dari 3 video.'),
+    h('div', { class: 'time-grid' },
+      h('figure', { class: 'mini-chart' }, h('figcaption', { text: 'Median views per hari, per blok 3 jam' }), h('div', { class: 'chart bar-chart', 'data-kind': 'hour' })),
+      h('figure', { class: 'mini-chart' }, h('figcaption', { text: 'Median views per hari, per hari tayang' }), h('div', { class: 'chart bar-chart', 'data-kind': 'day' }))));
+}
+function tile(label, value, sub) {
+  return h('div', { class: 'tile' }, h('div', { class: 'tile-label', text: label }), h('div', { class: 'tile-value', text: value }), sub ? h('div', { class: 'tile-sub', text: sub }) : null);
+}
+const nfSig2 = new Intl.NumberFormat('id-ID', { maximumSignificantDigits: 2 });
+function fLift(l) { return `${nfSig2.format(l)}×`; }
+function liftBadge(l) {
+  if (l == null) return h('span', { class: 'muted', text: 'Data kurang' });
+  if (l >= 1.15) return h('span', { class: 'lift up', text: `Lebih tinggi ${fLift(l)}` });
+  if (l <= 0.87) return h('span', { class: 'lift down', text: `Lebih rendah ${Math.round((1 - l) * 100)}%` });
+  return h('span', { class: 'lift', text: 'Hampir sama' });
+}
+function termList(title, items, extra) {
+  return h('div', { class: 'term-box' }, h('h4', { text: title }),
+    items.length
+      ? h('ol', { class: 'terms' }, items.map(t => h('li', null,
+          h('span', { class: 'term', text: t.text }),
+          h('span', { class: 'term-n', text: `${t.n} video` }),
+          t.lift != null ? h('span', { class: 'term-l' + (t.lift >= 1.15 ? ' up' : ''), text: fLift(t.lift) }) : null)))
+      : h('p', { class: 'muted small', text: 'Belum ada yang muncul di 2 video atau lebih.' }),
+    extra || null);
+}
+function titleSection(vids, nk) {
+  const sm = titleSummary(vids, nk), pats = patternRows(vids, nk);
+  const posEntries = [['awal', sm.pos.awal], ['tengah', sm.pos.tengah], ['akhir', sm.pos.akhir]];
+  const dom = posEntries.reduce((a, b) => (b[1] > a[1] ? b : a));
+  const posValue = dom[1] > 0 ? `Paling sering di ${dom[0]}` : 'Jarang dipakai';
+  const posSub = `Awal ${sm.pos.awal}, tengah ${sm.pos.tengah}, akhir ${sm.pos.akhir}, tidak ada ${sm.pos.none}`;
+  const words = termStats(vids, v => wordTerms(v, nk)).slice(0, 15);
+  const bigrams = termStats(vids, v => bigramTerms(v, nk)).slice(0, 10);
+  const tags = termStats(vids, hashtagTerms).slice(0, 10);
+  return h('div', { class: 'sub' }, subHead('Analisis judul kompetitor', 'Angka × membandingkan median views per hari video yang memakai pola atau kata itu dengan video lain di segmen ini. 1× berarti sama.'),
+    h('div', { class: 'tiles' },
+      tile('Panjang judul', `${fInt(sm.medLen)} karakter`, `Video 25% teratas: ${fInt(sm.medLenTop)} karakter`),
+      tile('Jumlah kata', `${fInt(sm.medWords)} kata`, `Video 25% teratas: ${fInt(sm.medWordsTop)} kata`),
+      tile('Posisi keyword di judul', posValue, posSub)),
+    h('div', { class: 'table-scroll' }, h('table', { class: 'mini-table wide' },
+      h('thead', null, h('tr', null, h('th', { scope: 'col', text: 'Pola judul' }), h('th', { scope: 'col', class: 'num', text: 'Dipakai' }), h('th', { scope: 'col', class: 'num', text: 'Views/hari (pakai)' }), h('th', { scope: 'col', class: 'num', text: 'Views/hari (tidak)' }), h('th', { scope: 'col', text: 'Efek' }))),
+      h('tbody', null, pats.map(p => h('tr', null,
+        h('th', { scope: 'row', text: p.label }),
+        h('td', { class: 'num', text: `${p.n} (${fPct(p.pct)})` }),
+        h('td', { class: 'num', text: fCompact(p.medYes) }),
+        h('td', { class: 'num', text: fCompact(p.medNo) }),
+        h('td', null, liftBadge(p.lift))))))),
+    h('div', { class: 'term-grid' }, termList('Kata yang sering dipakai', words), termList('Frasa dua kata', bigrams), termList('Hashtag di judul', tags)));
+}
+function tagSection(vids) {
+  const tagged = vids.filter(v => v.tags && v.tags.length);
+  const items = termStats(vids, tagTerms).slice(0, 20);
+  const note = tagged.length
+    ? `${tagged.length} dari ${vids.length} video memakai tag, median ${fInt(median(tagged.map(v => v.tags.length)))} tag per video. Menurut YouTube, tag hanya berperan kecil dalam penemuan video, jadi pakai sebagai referensi kata kunci.`
+    : 'Tidak ada video di segmen ini yang memakai tag.';
+  const copyBtn = items.length ? h('button', { type: 'button', class: 'btn sm', onclick: async () => {
+    const ok = await copyText(items.map(t => t.text).join(', '));
+    toast(ok ? `${items.length} tag disalin.` : 'Gagal menyalin. Pakai Unduh CSV.');
+  } }, 'Salin tag teratas') : null;
+  return h('div', { class: 'sub' }, subHead('Analisis tag kompetitor', note), termList('Tag yang paling sering dipakai', items, copyBtn));
+}
+function channelSection(vids) {
+  const ch = channelStats(vids).slice(0, 8);
+  return h('div', { class: 'sub' }, subHead('Channel yang paling sering muncul', null),
+    h('div', { class: 'table-scroll' }, h('table', { class: 'mini-table' },
+      h('thead', null, h('tr', null, h('th', { scope: 'col', text: 'Channel' }), h('th', { scope: 'col', class: 'num', text: 'Video' }), h('th', { scope: 'col', class: 'num', text: 'Subscriber' }), h('th', { scope: 'col', class: 'num', text: 'Median views/hari' }))),
+      h('tbody', null, ch.map(x => h('tr', null,
+        h('th', { scope: 'row', text: x.name || '(tanpa nama)' }),
+        h('td', { class: 'num', text: String(x.n) }),
+        h('td', { class: 'num', text: x.subs != null ? fCompact(x.subs) : 'disembunyikan' }),
+        h('td', { class: 'num', text: fCompact(x.medVpd) })))))));
+}
+const VSORT = {
+  rel: (a, b) => a.rank - b.rank,
+  views: (a, b) => (b.views || 0) - (a.views || 0),
+  vpd: (a, b) => (b.vpd || 0) - (a.vpd || 0),
+  new: (a, b) => (airTime(b) || 0) - (airTime(a) || 0),
+};
+function videoListSection(vids) {
+  const D = state.detail;
+  const list = vids.slice().sort(VSORT[D.sort] || VSORT.rel), shown = list.slice(0, D.limit);
+  const sortSel = h('select', { class: 'input', id: 'v-sort', 'aria-label': 'Urutkan video', onchange: e => { D.sort = e.target.value; renderDetail('#v-sort'); } },
+    [['rel', 'Relevansi YouTube'], ['views', 'Views terbanyak'], ['vpd', 'Views per hari'], ['new', 'Terbaru']].map(([v, l]) => h('option', { value: v, selected: D.sort === v }, l)));
+  return h('div', { class: 'sub' },
+    h('div', { class: 'sub-head' }, h('h3', { text: 'Daftar video' }), sortSel),
+    h('ol', { class: 'vlist' }, shown.map((v, i) => videoItem(v, i))),
+    list.length > shown.length
+      ? h('div', { class: 'panel-actions' }, h('button', { type: 'button', class: 'btn', onclick: () => { D.limit += 20; renderDetail(); } }, `Tampilkan ${Math.min(20, list.length - shown.length)} lagi (sisa ${list.length - shown.length})`))
+      : null);
+}
+function videoItem(v, i) {
+  const url = /^[\w-]{6,20}$/.test(v.id) ? `https://www.youtube.com/watch?v=${v.id}` : 'https://www.youtube.com/';
+  const thumb = /^https:\/\/i\.ytimg\.com\//.test(v.thumb) ? v.thumb : '';
+  const badges = [];
+  if (v.upcoming) badges.push(h('span', { class: 'badge', text: 'Terjadwal' }));
+  else if (v.type === 'live') badges.push(h('span', { class: 'badge', text: 'Live' }));
+  if (v.type === 'short') badges.push(h('span', { class: 'badge', text: '≤3 menit' }));
+  if (v.ratio != null && v.ratio >= 3) badges.push(h('span', { class: 'badge hot', text: `Outlier ${nf1.format(v.ratio)}×` }));
+  if (v.exact) badges.push(h('span', { class: 'badge', text: 'Judul persis' }));
+  const at = airTime(v);
+  const when = at ? `${v.liveStart ? 'Live ' : ''}${DAY_SHORT[dayIndex(new Date(at))]}, ${dfLong.format(new Date(at))} ${dfClock.format(new Date(at))} ${TZ_LABEL}` : '';
+  const tags = v.tags && v.tags.length ? `Tag: ${v.tags.slice(0, 6).join(', ')}${v.tags.length > 6 ? ` +${v.tags.length - 6}` : ''}` : '';
+  return h('li', { class: 'vid' },
+    h('span', { class: 'rank', text: String(i + 1) }),
+    h('a', { class: 'thumb', href: url, target: '_blank', rel: 'noopener', tabindex: -1, 'aria-hidden': 'true' },
+      thumb ? h('img', { src: thumb, alt: '', loading: 'lazy', width: 120, height: 68 }) : h('span', { class: 'thumb-ph' })),
+    h('div', { class: 'vid-main' },
+      h('a', { class: 'vid-title', href: url, target: '_blank', rel: 'noopener', text: v.title || '(tanpa judul)' }),
+      h('div', { class: 'vid-meta' },
+        h('span', { text: v.channel }),
+        h('span', { text: v.subs != null ? `${fCompact(v.subs)} subscriber` : 'Subscriber disembunyikan' }),
+        when ? h('span', { text: when }) : null),
+      badges.length ? h('div', { class: 'badges' }, badges) : null,
+      tags ? h('div', { class: 'vid-tags', text: tags }) : null),
+    h('div', { class: 'vid-stats' },
+      h('span', null, h('strong', { text: fCompact(v.views) }), ' views'),
+      h('span', null, h('strong', { text: fCompact(v.vpd) }), ' per hari')));
+}
+
+function methodBlock() {
+  return h('section', { class: 'panel method' }, h('details', null,
+    h('summary', null, 'Cara skor dan analisis dihitung'),
+    h('ul', null,
+      h('li', null, 'Permintaan (0–100): 80% dari median views per hari video di rentang ini, skala log (10 views/hari ≈ 21, 1.000 ≈ 60, 100.000 ke atas = 100), ditambah 20% dari jumlah saran autocomplete.'),
+      h('li', null, 'Persaingan (0–100): 50% dari median subscriber channel di 10 hasil teratas (100 subscriber = 0, 10 juta = 100, skala log), 25% dari porsi judul yang memuat keyword persis, 25% dari perkiraan jumlah video di rentang ini (100 video = 0, 1 juta = 100, skala log).'),
+      h('li', null, 'Skor peluang = 60% permintaan + 40% × (100 − persaingan).'),
+      h('li', null, 'Estimasi volume = volume jangkar × (rata-rata Trends keyword ÷ rata-rata Trends jangkar). Angka Trends harus berasal dari satu perbandingan yang sama.'),
+      h('li', null, 'Segmen: Live = video dengan data siaran langsung. Video ≤3 menit = durasi 3 menit ke bawah, kemungkinan Shorts. Judul persis = judul memuat keyword utuh. Outlier = views minimal 3× jumlah subscriber channel-nya.'),
+      h('li', null, `Jam tayang: jam terbit video, atau jam mulai siaran untuk live, dalam zona waktu perangkatmu (${TZ_LABEL}). Blok terbaik = median views per hari tertinggi dengan minimal ${MIN_BUCKET} video.`),
+      h('li', null, 'Views per hari dihitung dari total views dibagi umur video. YouTube mengubah cara hitung view publik pada akhir Agustus 2026 (view dihitung sejak video mulai diputar), jadi video lama dan baru tidak sepenuhnya setara.'),
+      h('li', null, 'Semua skor dan analisis bersifat relatif dan berbasis sampel 50 video teratas. Paling berguna untuk membandingkan keyword di rentang waktu dan wilayah yang sama.'))));
+}
+
+/* ---------------- charts ---------------- */
+function drawCharts() {
+  const c = state.compare; if (!c || !c.results.length) return;
+  const mx = $('#matrix'); if (mx) drawMatrix(mx, c.results);
+  document.querySelectorAll('.facet-chart').forEach(el => { const r = c.results[+el.dataset.i]; if (r) drawFacet(el, r); });
+  drawDetailCharts();
+}
+function drawDetailCharts() {
+  const c = state.compare; if (!c) return;
+  const r = c.results[state.detail.tab]; if (!r) return;
+  const vids = segVideos(r, state.detail.seg);
+  document.querySelectorAll('#detail-host .bar-chart').forEach(el => drawBars(el, buckets(vids, el.dataset.kind), r.slot));
+}
+function niceMax(v) {
+  if (!(v > 0)) return 1;
+  const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
+  return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p;
+}
+function topRoundedBar(x, y, w, hgt, r) {
+  r = Math.min(r, w / 2, hgt);
+  return `M${x},${y + hgt}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + hgt}Z`;
+}
+function drawBars(el, bs, slot) {
+  const W = Math.max(240, Math.round(el.clientWidth || 0)), H = 178;
+  const M = { l: 44, r: 8, t: 20, b: 36 };
+  const iw = W - M.l - M.r, ih = H - M.t - M.b;
+  const top = niceMax(Math.max(0, ...bs.map(b => b.medVpd || 0)));
+  const Y = v => M.t + ih - (v / top) * ih;
+  const best = bs.filter(b => b.n >= MIN_BUCKET && b.medVpd != null).reduce((a, b) => (!a || b.medVpd > a.medVpd ? b : a), null);
+  const band = iw / bs.length, bw = Math.min(24, band * 0.62);
+  const svg = s('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'group', 'aria-label': 'Median views per hari menurut waktu tayang' });
+  [0, top / 2, top].forEach((t, i) => {
+    svg.append(s('line', { class: i === 0 ? 'axis' : 'grid', x1: M.l, x2: M.l + iw, y1: Y(t), y2: Y(t) }));
+    svg.append(s('text', { class: 'tick', x: M.l - 6, y: Y(t) + 4, 'text-anchor': 'end', text: fCompact(t) }));
+  });
+  const g = s('g', { class: `s${slot}` });
+  bs.forEach((b, i) => {
+    const x = M.l + band * i + (band - bw) / 2, cx = x + bw / 2;
+    const y = Y(b.medVpd || 0), hgt = M.t + ih - y;
+    if (b.n > 0 && hgt > 0.5) g.append(s('path', { class: 'bar' + (best && b.i === best.i ? ' best' : '') + (b.n < MIN_BUCKET ? ' thin' : ''), d: topRoundedBar(x, y, bw, hgt, 4) }));
+    const xl = band < 44 && /^\d/.test(b.short) ? b.short.split('–')[0] : b.short;
+    svg.append(s('text', { class: 'tick', x: cx, y: H - 19, 'text-anchor': 'middle', text: xl }));
+    svg.append(s('text', { class: 'tick n', x: cx, y: H - 5, 'text-anchor': 'middle', text: String(b.n) }));
+    const hit = s('rect', { class: 'hit', x: M.l + band * i, y: M.t, width: band, height: ih, tabindex: 0, role: 'img',
+      'aria-label': `${blockName(b)}: ${b.n} video${b.n ? `, median ${fCompact(b.medVpd)} views per hari` : ''}` });
+    const show = (px, py) => showTip(px, py, [
+      h('strong', { text: b.n ? `${fCompact(b.medVpd)} views/hari` : 'Tidak ada video' }),
+      h('div', { class: 't-label', text: `${blockName(b)}, ${b.n} video${b.n && b.n < MIN_BUCKET ? ' (data tipis)' : ''}` }),
+    ]);
+    hit.addEventListener('pointerenter', e => show(e.clientX, e.clientY));
+    hit.addEventListener('pointermove', e => show(e.clientX, e.clientY));
+    hit.addEventListener('pointerleave', hideTip);
+    hit.addEventListener('focus', () => { const bb = hit.getBoundingClientRect(); show(bb.left + bb.width / 2, bb.top); });
+    hit.addEventListener('blur', hideTip);
+    g.append(hit);
+  });
+  svg.append(g);
+  if (best) svg.append(s('text', { class: 'vlabel', x: M.l + band * best.i + band / 2, y: Y(best.medVpd) - 6, 'text-anchor': 'middle', text: fCompact(best.medVpd) }));
+  svg.append(s('text', { class: 'tick n', x: M.l - 6, y: H - 5, 'text-anchor': 'end', text: 'video' }));
+  el.textContent = ''; el.append(svg);
+}
+function shortLabel(t, n) { return t.length > n ? t.slice(0, n - 1) + '…' : t; }
+function drawMatrix(el, results) {
+  const W = Math.max(280, Math.round(el.clientWidth || 0)), narrow = W < 560;
+  const H = narrow ? 300 : 360;
+  const M = { l: 46, r: 16, t: 14, b: 46 };
+  const iw = W - M.l - M.r, ih = H - M.t - M.b;
+  const X = v => M.l + clamp(v) / 100 * iw;
+  const Y = v => M.t + (1 - clamp(v) / 100) * ih;
+  const svg = s('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'group', 'aria-label': 'Peta peluang: permintaan dibanding persaingan untuk tiap keyword' });
+  for (const t of [0, 25, 50, 75, 100]) {
+    const cls = t === 0 ? 'axis' : (t === 50 ? 'mid' : 'grid');
+    svg.append(s('line', { class: cls, x1: M.l, x2: M.l + iw, y1: Y(t), y2: Y(t) }));
+    svg.append(s('line', { class: cls, x1: X(t), x2: X(t), y1: M.t, y2: M.t + ih }));
+    svg.append(s('text', { class: 'tick', x: M.l - 8, y: Y(t) + 4, 'text-anchor': 'end', text: t }));
+    svg.append(s('text', { class: 'tick', x: X(t), y: M.t + ih + 17, 'text-anchor': t === 0 ? 'start' : (t === 100 ? 'end' : 'middle'), text: t }));
+  }
+  svg.append(s('text', { class: 'quad', x: M.l + 10, y: M.t + 18, text: 'Peluang terbaik' }));
+  svg.append(s('text', { class: 'quad', x: M.l + iw - 10, y: M.t + ih - 10, 'text-anchor': 'end', text: 'Paling berat' }));
+  svg.append(s('text', { class: 'axis-title', x: M.l + iw / 2, y: H - 8, 'text-anchor': 'middle', text: 'Persaingan (0 longgar, 100 ketat)' }));
+  svg.append(s('text', { class: 'axis-title', x: 13, y: M.t + ih / 2, 'text-anchor': 'middle', transform: `rotate(-90 13 ${M.t + ih / 2})`, text: 'Permintaan' }));
+  const pts = results.map(r => ({ r, x: X(r.m.competition), y: Y(r.m.demand) }));
+  const placed = [];
+  pts.slice().sort((a, b) => a.y - b.y).forEach(p => {
+    const right = p.x < M.l + iw * 0.66;
+    const lx = right ? p.x + 11 : p.x - 11;
+    let ly = p.y + 4, guard = 0;
+    while (placed.some(q => Math.abs(q.y - ly) < 15 && Math.abs(q.x - lx) < 130) && guard++ < 8) ly += 15;
+    placed.push({ x: lx, y: ly });
+    Object.assign(p, { lx, ly, anchor: right ? 'start' : 'end' });
+  });
+  for (const p of pts) {
+    const r = p.r;
+    const grp = s('g', { class: `pt s${r.slot}`, tabindex: 0, role: 'img', 'aria-label': `${r.kw}: peluang ${r.m.opportunity}, permintaan ${r.m.demand}, persaingan ${r.m.competition}` });
+    grp.append(s('circle', { class: 'hit', cx: p.x, cy: p.y, r: 14 }));
+    grp.append(s('circle', { class: 'mk', cx: p.x, cy: p.y, r: 6 }));
+    grp.append(s('text', { class: 'dlabel', x: p.lx, y: p.ly, 'text-anchor': p.anchor, text: shortLabel(r.kw, narrow ? 18 : 28) }));
+    const show = (x, y) => showTip(x, y, [
+      h('strong', { text: `Peluang ${r.m.opportunity}` }),
+      h('div', { class: `t-row s${r.slot}` }, h('span', { class: 't-key' }), h('span', { text: r.kw })),
+      h('div', { class: 't-label', text: `Permintaan ${r.m.demand}, persaingan ${r.m.competition}` }),
+    ]);
+    grp.addEventListener('pointerenter', e => show(e.clientX, e.clientY));
+    grp.addEventListener('pointermove', e => show(e.clientX, e.clientY));
+    grp.addEventListener('pointerleave', hideTip);
+    grp.addEventListener('focus', () => { const b = grp.querySelector('.mk').getBoundingClientRect(); show(b.right, b.top); });
+    grp.addEventListener('blur', hideTip);
+    svg.append(grp);
+  }
+  el.textContent = ''; el.append(svg);
+}
+function drawFacet(el, r) {
+  const W = Math.max(240, Math.round(el.clientWidth || 0)), H = 184;
+  const M = { l: 46, r: 12, t: 10, b: 28 };
+  const iw = W - M.l - M.r, ih = H - M.t - M.b;
+  const vids = r.videos.filter(v => v.views != null && v.published != null && !v.upcoming);
+  el.textContent = '';
+  if (!vids.length) { el.append(h('p', { class: 'muted small empty-chart', text: 'Tidak ada video di rentang ini.' })); return; }
+  const t0 = new Date(r.start).getTime(), t1 = new Date(r.end).getTime();
+  const vmin = Math.max(1, Math.min(...vids.map(v => Math.max(1, v.views))));
+  const vmax = Math.max(10, ...vids.map(v => v.views));
+  let lo = Math.floor(Math.log10(vmin)), hi = Math.ceil(Math.log10(vmax));
+  if (hi <= lo) hi = lo + 1;
+  const X = t => M.l + clamp((t - t0) / Math.max(1, t1 - t0), 0, 1) * iw;
+  const Y = v => M.t + (1 - (Math.log10(Math.max(1, v)) - lo) / (hi - lo)) * ih;
+  const svg = s('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Sebaran ${vids.length} video untuk ${r.kw} menurut tanggal terbit dan views` });
+  const step = hi - lo > 4 ? 2 : 1;
+  for (let k = lo; k <= hi; k += step) {
+    svg.append(s('line', { class: k === lo ? 'axis' : 'grid', x1: M.l, x2: M.l + iw, y1: Y(10 ** k), y2: Y(10 ** k) }));
+    svg.append(s('text', { class: 'tick', x: M.l - 6, y: Y(10 ** k) + 4, 'text-anchor': 'end', text: fCompact(10 ** k) }));
+  }
+  [t0, (t0 + t1) / 2, t1].forEach((t, i) => svg.append(s('text', { class: 'tick', x: X(t), y: H - 8, 'text-anchor': i === 0 ? 'start' : (i === 2 ? 'end' : 'middle'), text: dfShort.format(new Date(t)) })));
+  const pts = vids.map(v => ({ v, x: X(v.published), y: Y(v.views) }));
+  const g = s('g', { class: `s${r.slot}` });
+  for (const p of pts) g.append(s('circle', { class: 'mk', cx: p.x, cy: p.y, r: 4 }));
+  const hl = s('circle', { class: 'mk hl', r: 6, cx: -99, cy: -99 });
+  g.append(hl);
+  svg.append(g);
+  const overlay = s('rect', { class: 'overlay', x: M.l - 8, y: M.t - 8, width: iw + 16, height: ih + 16 });
+  overlay.addEventListener('pointermove', e => {
+    const b = svg.getBoundingClientRect();
+    const mx = (e.clientX - b.left) * (W / b.width), my = (e.clientY - b.top) * (H / b.height);
+    let best = null, bd = 24 * 24;
+    for (const p of pts) { const d = (p.x - mx) ** 2 + (p.y - my) ** 2; if (d < bd) { bd = d; best = p; } }
+    if (!best) { hl.setAttribute('cx', -99); hideTip(); return; }
+    hl.setAttribute('cx', best.x); hl.setAttribute('cy', best.y);
+    const v = best.v;
+    showTip(e.clientX, e.clientY, [
+      h('strong', { text: `${fCompact(v.views)} views` }),
+      h('div', { class: 't-title', text: v.title }),
+      h('div', { class: 't-label', text: `${v.channel}, ${dfLong.format(new Date(v.published))}` }),
+      h('div', { class: 't-label', text: `${fCompact(v.vpd)} views per hari` }),
+    ]);
+  });
+  overlay.addEventListener('pointerleave', () => { hl.setAttribute('cx', -99); hideTip(); });
+  svg.append(overlay);
+  el.append(svg);
+}
+let lastW = 0, rsTimer = null;
+if ('ResizeObserver' in window) {
+  new ResizeObserver(entries => {
+    const w = Math.round(entries[0].contentRect.width);
+    if (w && w !== lastW) { lastW = w; clearTimeout(rsTimer); rsTimer = setTimeout(drawCharts, 120); }
+  }).observe($('#compare-out'));
+}
+
+/* ---------------- Google Trends embed ---------------- */
+let trendsPromise = null;
+function loadTrends() {
+  if (window.trends && window.trends.embed) return Promise.resolve(true);
+  if (trendsPromise) return trendsPromise;
+  trendsPromise = new Promise(resolve => {
+    const el = document.createElement('script');
+    const timer = setTimeout(() => resolve(!!(window.trends && window.trends.embed)), 12000);
+    el.onload = () => { clearTimeout(timer); resolve(!!(window.trends && window.trends.embed)); };
+    el.onerror = () => { clearTimeout(timer); trendsPromise = null; resolve(false); };
+    el.src = TRENDS_LOADER; el.async = true;
+    document.head.append(el);
+  });
+  return trendsPromise;
+}
+function trendsTime(range) { return `${ymd(range.start)} ${ymd(range.end)}`; }
+function trendsUrl(kws, range, region) {
+  return 'https://trends.google.com/trends/explore?date=' + encodeURIComponent(trendsTime(range)) +
+    `&geo=${region}&gprop=youtube&q=` + kws.map(encodeURIComponent).join(',') + `&hl=${REGIONS[region].hl}`;
+}
+async function renderTrendsWidget(box, type, kws, range, region) {
+  const loaded = await loadTrends();
+  if (!box.isConnected) return;
+  box.textContent = '';
+  if (!loaded) { box.append(h('p', { class: 'muted small', text: 'Grafik Google Trends tidak bisa dimuat di halaman ini. Pakai tombol “Buka di Google Trends”.' })); return; }
+  const time = trendsTime(range);
+  const req = { comparisonItem: kws.map(k => ({ keyword: k, geo: region, time })), category: 0, property: 'youtube' };
+  const eq = 'date=' + encodeURIComponent(time) + `&geo=${region}&gprop=youtube&q=` + kws.map(encodeURIComponent).join(',') + `&hl=${REGIONS[region].hl}`;
+  try { window.trends.embed.renderExploreWidgetTo(box, type, req, { exploreQuery: eq, guestPath: 'https://trends.google.com:443/trends/embed/' }); }
+  catch (e) { box.append(h('p', { class: 'muted small', text: 'Grafik Google Trends gagal ditampilkan. Pakai tombol “Buka di Google Trends”.' })); }
+}
+
+/* ---------------- CSV exports ---------------- */
+function localStamp(t) {
+  if (t == null) return '';
+  const d = new Date(t);
+  return `${ymd(d)} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+function exportCompareCsv(c) {
+  const est = estimates(c);
+  const rows = [['keyword', 'rentang_mulai', 'rentang_akhir', 'wilayah', 'skor_peluang', 'permintaan', 'persaingan', 'estimasi_pencarian_per_bulan', 'keyakinan_estimasi', 'median_views_per_hari', 'median_views', 'saran_autocomplete', 'engagement_persen', 'median_subscriber_top10', 'judul_persis_top10_persen', 'outlier_top20', 'perkiraan_jumlah_video', 'video_dianalisis', 'jumlah_live', 'jumlah_pendek', 'jumlah_panjang', 'jumlah_judul_persis', 'jumlah_outlier', 'jam_tayang_terbaik', 'hari_tayang_terbaik', 'zona_waktu']];
+  const r2 = v => isNum(v) ? Math.round(v * 100) / 100 : '';
+  for (const r of c.results) {
+    const m = r.m, all = validVideos(r), bh = bestBucket(all, 'hour'), bd = bestBucket(all, 'day');
+    const x = est ? est.items[norm(r.kw)] : null;
+    rows.push([r.kw, ymd(c.range.start), ymd(c.range.end), c.region, m.opportunity, m.demand, m.competition, x ? x.est : '', x ? (x.anchor ? 'jangkar' : x.conf) : '', r2(m.medianVpd), r2(m.medianViews), m.acCount ?? '', isNum(m.engagement) ? r2(m.engagement * 100) : '', r2(m.top10Subs), m.exactPct ?? '', m.outliers ?? '', m.totalResults ?? '', m.sample, m.nLive, m.nShort, m.nLong, m.nExact, m.nOutlier, bh ? fmtBlock(bh) : '', bd ? bd.label : '', TZ_LABEL]);
+  }
+  downloadCsv(`keyword-lab-ringkasan-${ymd(new Date())}.csv`, rows);
+}
+function exportVideosCsv(c) {
+  const rows = [['keyword', 'peringkat_relevansi', 'judul', 'channel', 'url', 'jam_tayang_lokal', 'hari', 'views', 'views_per_hari', 'subscriber_channel', 'durasi_detik', 'tipe', 'judul_persis', 'outlier', 'rasio_views_subscriber', 'like', 'komentar', 'tags']];
+  for (const r of c.results) for (const v of r.videos) {
+    const at = airTime(v);
+    rows.push([r.kw, v.rank, v.title, v.channel, `https://www.youtube.com/watch?v=${v.id}`, localStamp(at), at ? DAY_NAMES[dayIndex(new Date(at))] : '', v.views ?? '', isNum(v.vpd) ? Math.round(v.vpd * 10) / 10 : '', v.subs ?? '', v.dur ?? '', v.upcoming ? 'terjadwal' : v.type, v.exact ? 'ya' : 'tidak', v.ratio != null && v.ratio >= 3 ? 'ya' : 'tidak', isNum(v.ratio) ? Math.round(v.ratio * 100) / 100 : '', v.likes ?? '', v.comments ?? '', (v.tags || []).join(' | ')]);
+  }
+  downloadCsv(`keyword-lab-video-${ymd(new Date())}.csv`, rows);
+}
+function exportTermsCsv(r, vids, seg) {
+  const nk = norm(r.kw);
+  const rows = [['keyword', 'segmen', 'jenis', 'teks', 'jumlah_video', 'median_views_per_hari', 'efek_x']];
+  const r1 = v => isNum(v) ? Math.round(v * 10) / 10 : '', rx = v => isNum(v) ? Math.round(v * 100) / 100 : '';
+  patternRows(vids, nk).forEach(p => rows.push([r.kw, seg.label, 'pola judul', p.label, p.n, r1(p.medYes), rx(p.lift)]));
+  const add = (jenis, list) => list.forEach(t => rows.push([r.kw, seg.label, jenis, t.text, t.n, r1(t.medVpd), rx(t.lift)]));
+  add('kata', termStats(vids, v => wordTerms(v, nk)));
+  add('frasa', termStats(vids, v => bigramTerms(v, nk)));
+  add('hashtag', termStats(vids, hashtagTerms));
+  add('tag', termStats(vids, tagTerms));
+  downloadCsv(`keyword-lab-judul-tag-${nk.replace(/ /g, '-')}-${seg.id}.csv`, rows);
+}
+
+/* ---------------- related keywords ---------------- */
+async function runRelated(seedArg) {
+  if (state.related && state.related.running) return;
+  const seed = String(seedArg != null ? seedArg : $('#seed').value).trim().replace(/\s+/g, ' ').slice(0, 100);
+  if (!norm(seed)) { toast('Isi keyword awal dulu.'); $('#seed').focus(); return; }
+  $('#seed').value = seed;
+  let range = getRange();
+  if (range.error) { const now = new Date(), st = new Date(now.getTime() - 30 * 864e5); st.setHours(0, 0, 0, 0); range = { start: st, end: now, label: '30 hari terakhir' }; }
+  const lang = REGIONS[state.region].lang;
+  const mods = MODS[lang] || MODS.en;
+  const qs = [{ text: seed, w: 1.6 }];
+  if ($('#opt-letters').checked) for (const ch of 'abcdefghijklmnopqrstuvwxyz') qs.push({ text: `${seed} ${ch}`, w: 1 });
+  if ($('#opt-pre').checked) for (const p of mods.pre) qs.push({ text: `${p} ${seed}`, w: 1.1 });
+  if ($('#opt-post').checked) for (const p of [...mods.post, String(new Date().getFullYear())]) qs.push({ text: `${seed} ${p}`, w: 1.1 });
+  const R = { seed, range, region: state.region, items: [], running: true, done: 0, total: qs.length, failed: 0 };
+  state.related = R;
+  state.relSelected = new Set(); state.relFilter = ''; state.relLimit = 50;
+  $('#btn-related').disabled = true;
+  renderRelated();
+  const agg = new Map(), seedN = norm(seed);
+  await pool(qs, 3, async q => {
+    try {
+      const list = await suggest(q.text);
+      const N = Math.max(10, list.length);
+      list.forEach((t, pos) => {
+        const k = norm(t);
+        if (!k || k === seedN) return;
+        let e = agg.get(k);
+        if (!e) { e = { text: t, key: k, score: 0, hits: 0 }; agg.set(k, e); }
+        e.score += q.w * (N - pos) / N; e.hits++;
+      });
+    } catch (e) { R.failed++; }
+    R.done++; updateRelatedProgress();
+    await sleep(60);
+  });
+  const items = [...agg.values()];
+  const max = items.reduce((a, b) => Math.max(a, b.score), 0) || 1;
+  for (const it of items) {
+    it.signal = Math.max(1, Math.round(it.score / max * 100));
+    it.words = it.key.split(' ').length;
+    it.question = QUESTION_RE.test(it.key);
+  }
+  items.sort((a, b) => b.signal - a.signal || a.key.localeCompare(b.key));
+  R.items = items; R.running = false;
+  $('#btn-related').disabled = false;
+  if (state.related === R) renderRelated();
+}
+function updateRelatedProgress() {
+  const R = state.related; if (!R) return;
+  const t = $('#rel-progress-text'), bar = $('#rel-progress-bar');
+  if (t) t.textContent = `Mengambil saran ${R.done} dari ${R.total}…`;
+  if (bar) { bar.style.width = Math.round(R.done / R.total * 100) + '%'; bar.parentNode.setAttribute('aria-valuenow', R.done); }
+}
+function renderRelated() {
+  const out = $('#related-out'); out.textContent = '';
+  const R = state.related;
+  if (!R) {
+    out.append(h('div', { class: 'empty' },
+      h('p', { class: 'empty-lead', text: 'Temukan keyword turunan dari satu keyword awal.' }),
+      h('p', { class: 'muted', text: `Datanya dari saran pencarian YouTube untuk wilayah ${REGIONS[state.region].name}. Tidak butuh API key dan tidak memakai kuota.` }),
+      h('div', { class: 'examples' }, ['mobile legends', 'mpl id', 'nobar bola'].map(t =>
+        h('button', { type: 'button', class: 'btn sm', onclick: () => runRelated(t) }, t)))));
+    return;
+  }
+  if (R.running) {
+    out.append(h('section', { class: 'panel' },
+      h('p', { class: 'status', id: 'rel-progress-text', text: `Mengambil saran ${R.done} dari ${R.total}…` }),
+      h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Progres pengambilan saran', 'aria-valuemin': 0, 'aria-valuemax': R.total, 'aria-valuenow': R.done },
+        h('span', { id: 'rel-progress-bar', style: `width:${Math.round(R.done / R.total * 100)}%` }))));
+    return;
+  }
+  if (!R.items.length) {
+    out.append(h('div', { class: 'notice err', role: 'alert' },
+      R.failed >= R.total
+        ? 'Saran YouTube tidak bisa diambil. Cek koneksi internet atau matikan ad-blocker untuk halaman ini, lalu coba lagi.'
+        : `Belum ada saran untuk “${R.seed}”. Coba keyword yang lebih umum.`));
+    return;
+  }
+  out.append(relatedPanel(R), relatedTrendsPanel(R));
+}
+function filteredRelated(R) {
+  const f = norm(state.relFilter);
+  let items = R.items.filter(it => (!f || it.key.includes(f)) &&
+    (state.relGroup === 'all' || (state.relGroup === 'q' && it.question) || (state.relGroup === 'long' && it.words >= 4)));
+  if (state.relSort === 'az') items = items.slice().sort((a, b) => a.key.localeCompare(b.key));
+  else if (state.relSort === 'words') items = items.slice().sort((a, b) => b.words - a.words || b.signal - a.signal);
+  return items;
+}
+function relatedPanel(R) {
+  const groupSeg = h('div', { class: 'seg small', role: 'group', 'aria-label': 'Kelompok keyword' },
+    [['all', 'Semua'], ['q', 'Pertanyaan'], ['long', 'Long-tail']].map(([id, label]) =>
+      h('button', { type: 'button', 'data-g': id, 'aria-pressed': String(state.relGroup === id), onclick: e => {
+        state.relGroup = id; state.relLimit = 50;
+        e.currentTarget.parentNode.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === id)));
+        renderRelRows();
+      } }, label)));
+  const toolbar = h('div', { class: 'rel-toolbar' },
+    h('input', { type: 'search', class: 'input', placeholder: 'Saring hasil', 'aria-label': 'Saring related keywords', value: state.relFilter, oninput: e => { state.relFilter = e.target.value; state.relLimit = 50; renderRelRows(); } }),
+    groupSeg,
+    h('select', { class: 'input', 'aria-label': 'Urutkan', onchange: e => { state.relSort = e.target.value; renderRelRows(); } },
+      [['signal', 'Sinyal tertinggi'], ['az', 'A sampai Z'], ['words', 'Kata terbanyak']].map(([v, l]) => h('option', { value: v, selected: state.relSort === v }, l))));
+  const actions = h('div', { class: 'panel-actions' },
+    h('button', { type: 'button', class: 'btn primary', id: 'rel-compare', onclick: compareSelected }, 'Bandingkan yang dipilih (0)'),
+    h('button', { type: 'button', class: 'btn', onclick: () => exportRelatedCsv(R) }, 'Unduh CSV'),
+    h('button', { type: 'button', class: 'btn', onclick: async () => { const ok = await copyText(filteredRelated(R).map(i => i.text).join('\n')); toast(ok ? 'Daftar keyword disalin.' : 'Gagal menyalin. Pakai Unduh CSV.'); } }, 'Salin daftar'));
+  const table = h('table', { class: 'rel-table' },
+    h('thead', null, h('tr', null,
+      h('th', { class: 'sel', scope: 'col' }, h('span', { class: 'sr-only', text: 'Pilih' })),
+      h('th', { scope: 'col', text: 'Keyword' }),
+      h('th', { scope: 'col', text: 'Sinyal' }),
+      h('th', { scope: 'col', class: 'num', text: 'Muncul' }),
+      h('th', { scope: 'col' }, h('span', { class: 'sr-only', text: 'Aksi' })))),
+    h('tbody', { id: 'rel-rows' }));
+  const sec = section(`Related keywords untuk “${R.seed}”`, null, toolbar, h('p', { class: 'muted small', id: 'rel-count' }), h('div', { class: 'rel-wrap' }, table),
+    h('div', { class: 'panel-actions' }, h('button', { type: 'button', class: 'btn', id: 'rel-more', hidden: true, onclick: () => { state.relLimit += 50; renderRelRows(); } }, 'Tampilkan lagi')),
+    actions);
+  queueMicrotask(renderRelRows);
+  return sec;
+}
+function renderRelRows() {
+  const R = state.related, body = $('#rel-rows'); if (!R || !body) return;
+  const items = filteredRelated(R), shown = items.slice(0, state.relLimit);
+  body.textContent = '';
+  for (const it of shown) {
+    body.append(h('tr', null,
+      h('td', { class: 'sel' }, h('input', { type: 'checkbox', 'aria-label': `Pilih ${it.text}`, checked: state.relSelected.has(it.key), onchange: e => { if (e.target.checked) state.relSelected.add(it.key); else state.relSelected.delete(it.key); updateRelCompareBtn(); } })),
+      h('td', { class: 'kw' }, it.text, it.question ? h('span', { class: 'qtag', text: 'pertanyaan' }) : null),
+      h('td', { class: 'sigcell' }, h('div', { class: 'sig' }, h('div', { class: 'meter', 'aria-hidden': 'true' }, h('span', { style: `width:${it.signal}%` })), h('span', { text: String(it.signal) }))),
+      h('td', { class: 'num', text: `${it.hits}×` }),
+      h('td', { class: 'acts' }, h('div', { class: 'row-actions' },
+        h('button', { type: 'button', class: 'btn quiet sm', 'aria-label': `Tambahkan ${it.text} ke Bandingkan`, onclick: () => { if (addKeyword(it.text)) toast(`“${it.text}” masuk ke Bandingkan (${state.keywords.length}/5).`); } }, 'Bandingkan'),
+        h('button', { type: 'button', class: 'btn quiet sm', 'aria-label': `Cari related keywords dari ${it.text}`, onclick: () => runRelated(it.text) }, 'Telusuri')))));
+  }
+  const total = R.items.length;
+  $('#rel-count').textContent = (items.length === total ? `${total} keyword ditemukan` : `Menampilkan ${items.length} dari ${total} keyword`) +
+    `. Diambil dari ${R.total - R.failed} pencarian saran${R.failed ? `, ${R.failed} gagal` : ''}. Sinyal 100 = paling sering dan paling atas muncul.`;
+  const more = $('#rel-more');
+  if (more) {
+    const rest = items.length - shown.length;
+    more.hidden = rest <= 0;
+    more.textContent = `Tampilkan ${Math.min(50, rest)} lagi (sisa ${rest})`;
+  }
+  updateRelCompareBtn();
+}
+function updateRelCompareBtn() {
+  const b = $('#rel-compare'); if (!b) return;
+  const n = state.relSelected.size;
+  b.textContent = `Bandingkan yang dipilih (${n})`;
+  b.disabled = n === 0;
+}
+function compareSelected() {
+  const R = state.related; if (!R) return;
+  const picked = R.items.filter(it => state.relSelected.has(it.key)).map(it => it.text);
+  if (!picked.length) return;
+  state.keywords = [];
+  picked.slice(0, MAX_KW).forEach(t => addKeyword(t, true));
+  setView('compare');
+  toast(picked.length > MAX_KW ? `Hanya 5 keyword pertama yang dipakai. Klik Analisis.` : `${picked.length} keyword siap dibandingkan. Klik Analisis.`);
+  $('#btn-analyze').focus();
+}
+function relatedTrendsPanel(R) {
+  const box = h('div', { class: 'trends-box' }, h('p', { class: 'muted small', text: 'Memuat Google Trends…' }));
+  queueMicrotask(() => renderTrendsWidget(box, 'RELATED_QUERIES', [R.seed], R.range, R.region));
+  return section('Kueri terkait dari Google Trends', `Kueri top dan naik daun untuk “${R.seed}” di YouTube Search, ${REGIONS[R.region].name}, ${R.range.label}.`,
+    box,
+    h('div', { class: 'panel-actions' }, h('a', { class: 'btn', href: trendsUrl([R.seed], R.range, R.region), target: '_blank', rel: 'noopener' }, 'Buka di Google Trends')));
+}
+function exportRelatedCsv(R) {
+  const rows = [['keyword', 'sinyal', 'muncul_di_pencarian', 'pertanyaan', 'jumlah_kata']];
+  for (const it of filteredRelated(R)) rows.push([it.text, it.signal, it.hits, it.question ? 'ya' : 'tidak', it.words]);
+  downloadCsv(`keyword-lab-related-${norm(R.seed).replace(/ /g, '-')}.csv`, rows);
+}
+
+/* ---------------- views, theme, settings ---------------- */
+function setView(v) {
+  for (const [tab, panel, id] of [['#tab-compare', '#view-compare', 'compare'], ['#tab-related', '#view-related', 'related']]) {
+    const on = v === id;
+    $(tab).setAttribute('aria-selected', String(on)); $(tab).tabIndex = on ? 0 : -1; $(panel).hidden = !on;
+  }
+  hideTip();
+}
+function applyTheme() {
+  const root = document.documentElement;
+  if (state.theme === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', state.theme);
+  const label = { auto: 'Tema: ikuti sistem', light: 'Tema: terang', dark: 'Tema: gelap' }[state.theme] || 'Tema';
+  const b = $('#btn-theme'); b.setAttribute('aria-label', label); b.title = label;
+}
+function openSettings(note) {
+  const d = $('#dlg-settings');
+  d.returnValue = '';
+  $('#api-key').value = state.apiKey; $('#api-key').type = 'password';
+  $('#btn-show-key').textContent = 'Lihat'; $('#btn-show-key').setAttribute('aria-pressed', 'false');
+  $('#remember').checked = !!state.remember; $('#limit').value = state.searchLimit;
+  const n = $('#dlg-note'); n.hidden = !note; n.textContent = note || '';
+  $('#test-result').textContent = '';
+  if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+  setTimeout(() => $('#api-key').focus(), 30);
+}
+function saveSettings() {
+  state.apiKey = $('#api-key').value.trim();
+  state.remember = $('#remember').checked;
+  const lim = parseInt($('#limit').value, 10);
+  state.searchLimit = lim > 0 ? lim : 100;
+  LS.set('kl.remember', state.remember); LS.set('kl.limit', state.searchLimit);
+  if (state.remember && state.apiKey) LS.set('kl.key', state.apiKey); else LS.del('kl.key');
+  renderQuota();
+  if (!state.compare) renderCompare();
+  toast('Pengaturan disimpan.');
+}
+
+/* ---------------- events ---------------- */
+const kwInput = $('#kw-input');
+$('#chips').addEventListener('click', e => { if (e.target === e.currentTarget) kwInput.focus(); });
+kwInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    if (kwInput.value.trim()) { addKeyword(kwInput.value); kwInput.value = ''; }
+    else if (e.key === 'Enter') runCompare();
+  } else if (e.key === 'Backspace' && !kwInput.value && state.keywords.length) {
+    removeKeyword(state.keywords.length - 1);
+  }
+});
+kwInput.addEventListener('paste', e => {
+  const t = (e.clipboardData || window.clipboardData).getData('text');
+  if (/[,\n]/.test(t)) { e.preventDefault(); t.split(/[,\n]+/).forEach(x => addKeyword(x, true)); }
+});
+$('#btn-analyze').addEventListener('click', runCompare);
+$('#force').addEventListener('change', updateCost);
+$('#btn-related').addEventListener('click', () => runRelated());
+$('#seed').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runRelated(); } });
+$('#tab-compare').addEventListener('click', () => setView('compare'));
+$('#tab-related').addEventListener('click', () => setView('related'));
+document.querySelector('.tabs').addEventListener('keydown', e => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  e.preventDefault();
+  const next = $('#tab-compare').getAttribute('aria-selected') === 'true' ? 'related' : 'compare';
+  setView(next); $(next === 'compare' ? '#tab-compare' : '#tab-related').focus();
+});
+$('#btn-theme').addEventListener('click', () => {
+  state.theme = { auto: 'light', light: 'dark', dark: 'auto' }[state.theme] || 'auto';
+  LS.set('kl.theme', state.theme); applyTheme();
+  toast($('#btn-theme').title + '.');
+});
+$('#btn-settings').addEventListener('click', () => openSettings());
+$('#btn-cancel').addEventListener('click', () => $('#dlg-settings').close('cancel'));
+$('#dlg-settings').addEventListener('close', () => { if ($('#dlg-settings').returnValue === 'save') saveSettings(); });
+$('#btn-show-key').addEventListener('click', e => {
+  const i = $('#api-key'), show = i.type === 'password';
+  i.type = show ? 'text' : 'password';
+  e.currentTarget.textContent = show ? 'Sembunyikan' : 'Lihat';
+  e.currentTarget.setAttribute('aria-pressed', String(show));
+});
+$('#btn-test-key').addEventListener('click', async () => {
+  const key = $('#api-key').value.trim(), out = $('#test-result');
+  if (!key) { out.textContent = 'Isi API key dulu.'; return; }
+  out.textContent = 'Mengetes key…';
+  try {
+    await yt('i18nRegions', { part: 'snippet', hl: 'id', fields: 'items/id' }, key);
+    quotaAdd('units', 1);
+    out.textContent = 'Key berfungsi. YouTube Data API v3 sudah aktif.';
+  } catch (e) { out.textContent = e.message; }
+});
+$('#btn-clear-cache').addEventListener('click', () => { LS.del(CACHE_KEY); updateCost(); $('#test-result').textContent = 'Cache dihapus. Analisis berikutnya mengambil data baru.'; });
+$('#region').addEventListener('change', e => {
+  state.region = e.target.value; LS.set('kl.region', state.region);
+  updateCost(); markStale();
+  if (!state.related) renderRelated();
+});
+function syncCustom() {
+  state.customStart = $('#d-start').value; state.customEnd = $('#d-end').value;
+  updateCost(); markStale();
+}
+$('#d-start').addEventListener('change', syncCustom);
+$('#d-end').addEventListener('change', syncCustom);
+window.addEventListener('scroll', hideTip, { passive: true });
+
+/* ---------------- init ---------------- */
+(function init() {
+  applyTheme();
+  const sel = $('#region');
+  for (const code in REGIONS) sel.append(h('option', { value: code, selected: code === state.region }, REGIONS[code].name));
+  const today = new Date(), monthAgo = new Date(today.getTime() - 30 * 864e5);
+  $('#d-end').value = ymd(today); $('#d-end').max = ymd(today); $('#d-start').max = ymd(today);
+  $('#d-start').value = ymd(monthAgo); $('#d-start').min = '2005-04-23'; $('#d-end').min = '2005-04-23';
+  state.customStart = $('#d-start').value; state.customEnd = $('#d-end').value;
+  const saved = LS.get('kl.keywords', []);
+  if (Array.isArray(saved)) saved.slice(0, MAX_KW).forEach(t => addKeyword(t, true));
+  renderRangeSeg(); renderChips(); renderQuota(); renderCompare(); renderRelated();
+  showNotice(null);
+})();
+})();
+</script>
+</body>
+</html>
